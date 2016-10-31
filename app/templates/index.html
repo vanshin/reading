@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %} index {% endblock %}
+
+
+
+{% block sidebar %}
+<div id="sidebar" class="col-md-2">
+    <button id="addul" onclick="addul()">添加序列</button>
+    <input id="inputul" type="text" name="序列名" value="">
+    
+    
+</div>
+{% endblock %}
+
+{% block reading %}
+<div id="reading" class="col-md-7">
+    <p id="post1" class="post1">
+        In 1939 two brothers, Mac and Dick McDonald, started a drive-in restaurant in San Bernadino, California. They carefully chose a busy corner for their location. They had run their own businesses for years, first a theater, then a barbecue（烤肉）restaurant, and then another drive-in. But in their new operation, they offered a new, shortened menu: French fries, hamburgers, and sodas. To this small selection they added one new concept: quick service, no waiters or waitresses, and no tips.　
+    </p>
+</div>
+{% endblock %}
+
+{% block control %}
+<div class="col-md-3" id="control">
+    <p class="test"></p>
+    <button></button>
+</div>
+{% endblock %}

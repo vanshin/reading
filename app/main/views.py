@@ -1,7 +1,8 @@
+#codingutf-8
 from . import main
 from flask import render_template
 from .forms import readingForm
-from ..models import Reading,Sentence,Word
+from ..models import Reading,Sentence
 from .. import db
 
 @main.route('/')
@@ -20,6 +21,6 @@ def input():
         reading_id = reading.id
         db.session.add(reading)
         for sentence_body in sentences_list:
-            sentence = (reading_id=reading_id,sentence_body=sentence_body)
+            sentence = Sentence(reading_id=reading_id,sentence_body=sentence_body)
             db.session.add(sentence)
     return render_template('input.html',form=form)

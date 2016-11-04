@@ -1,12 +1,12 @@
 #coding=utf-8
-from app import create_app
-from flask_script import Manager
+from app import create_app,db
+from flask_script import Manager,Shell
 from flask_migrate import Migrate,MigrateCommand
 from app.models import Reading,Sentence
 
-import sys
-reload(sys)
-sys.setdefaultencoding("utf-8")
+# import sys
+# reload(sys)
+# sys.setdefaultencoding("utf-8")
 
 app = create_app('default')
 manager = Manager(app)

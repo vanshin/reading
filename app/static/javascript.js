@@ -33,13 +33,16 @@ function addul(){
 
 function showReading(){
 	$().click(function(){
+		var $reading = $("#reading")
+	
 		$.ajax({
-			
 			type:'GET',
 			url:'/show',
-			 data:{reading_name:},
-		
+			data:{reading_name:},
+			dataType:'json'
 
-		});
+		}).done(function(data){
+			$reading.append()
+		})
 	});
 }

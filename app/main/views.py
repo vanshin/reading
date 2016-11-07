@@ -1,6 +1,6 @@
 #codingutf-8
 from . import main
-from flask import render_template
+from flask import render_template,jsonify
 from .forms import readingForm
 from ..models import Reading,Sentence
 from .. import db
@@ -26,7 +26,7 @@ def input():
         reading = Reading(order_name=order_name,reading_name=reading_name)
         db.session.add(reading)
         db.session.commit()
-        print reading.id
+        # print reading.id
         reading_id = reading.id
         # db.session.add(reading)
         for sentence_body in sentences_list:
@@ -38,5 +38,6 @@ def input():
 @app.route('/getReading/<id>',methods=['GET','POST'])
 def getReading(id):
     reading = Reading.query.filter_by(id=id).first()
-    reading.sentences
-    return jsonify
+    sentences_dict = {x:reading.sentences for x in range(100)}
+    
+    return jsonify(sentences_dict)

@@ -7,8 +7,8 @@ class Reading(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     order_name = db.Column(db.Text)
     reading_name = db.Column(db.String(64))
-    sentences = db.relationship('Sentence',backref='reading')
-    timestamp = db.Column(db.Integer,index=True,default=datetime.utcnow)
+    sentences = db.relationship('Sentence',backref='reading',lazy='dynamic')
+    
     def __repf__(self):
         return '<Reading %r>' % self.reading_name
 

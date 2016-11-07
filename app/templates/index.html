@@ -8,6 +8,15 @@
 <div id="sidebar" class="col-md-2">
     <button id="addul" onclick="addul()">添加序列</button>
     <input id="inputul" type="text" name="序列名" value="">
+    <div>
+        {% for list in order_list %}
+            <ui onclick=""><a href="#">{{ list }}</a>
+                {% for reading in readings %}
+                    <li id={{reading.id}} onclick="">{{ reading_name }}</li>
+                {% endfor %}
+            </ui>
+        {% endfor %}
+    </div>
     
     
 </div>

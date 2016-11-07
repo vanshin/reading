@@ -30,3 +30,16 @@ function addul(){
 	}
 	
 }
+
+function showReading(){
+	$().click(function(){
+		$.ajax({
+			
+			type:'GET',
+			url:'/show',
+			 data:{reading_name:},
+		
+
+		});
+	});
+}

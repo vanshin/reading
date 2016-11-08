@@ -5,8 +5,8 @@ from flask_migrate import Migrate,MigrateCommand
 from app.models import Reading,Sentence
 
 import sys
-# reload(sys)
-# sys.setdefaultencoding("utf-8")
+reload(sys)
+sys.setdefaultencoding("utf-8")
 
 app = create_app('default')
 manager = Manager(app)

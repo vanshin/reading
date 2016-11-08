@@ -32,17 +32,27 @@ function addul(){
 }
 
 function showReading(){
-	$().click(function(){
+	$(".reading_id").each(function(){
 		var $reading = $("#reading")
-	
+		var $id;
+		var $test = $("#test")
+		var $reading = $("#reading")
+		$(this).click(function(){
+			var $id = $(this).attr("id");
+
+		})
 		$.ajax({
 			type:'GET',
-			url:'/show',
-			data:{reading_name:},
+			url:'/reading',
+			data:{reading_id:$id},
 			dataType:'json'
 
 		}).done(function(data){
-			$reading.append()
+			$.each(data,function(n,value){
+				var p = "";
+				p = "<p>" + value.reaing_body + "</p>";
+			})
+			$reading.prepend(p)
 		})
 	});
 }

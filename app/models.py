@@ -5,12 +5,23 @@ from datetime import datetime
 class Reading(db.Model):
     __tablename__ = 'readings'
     id = db.Column(db.Integer,primary_key=True)
-    order_name = db.Column(db.Text)
+    reading_order = db.Column(db.Text)
     reading_name = db.Column(db.String(64))
+    reading_body = db.Column(db.Text)
     sentences = db.relationship('Sentence',backref='reading',lazy='dynamic')
     
     def __repf__(self):
         return '<Reading %r>' % self.reading_name
+
+    def to_json(self):
+        json_reading = {
+            'id':self.id,
+            'reading_order':self.reading_order,
+            'reading_name':self.reading_name,
+            'reading_body':self.reading_body
+
+        }
+        return json_reading
 
 class Sentence(db.Model):
     __tablename__ = 'sentences'

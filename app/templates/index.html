@@ -10,7 +10,7 @@
     <input id="inputul" type="text" name="序列名" value="">
     <div>
         {% for list in order_list %}
-            <ui onclick=""><a href="#">{{ list }}</a>
+            <ui id="order" onclick=""><a href="#">{{ list }}</a>
                 {% for reading in readings %}
                     <li class="reading_id" id={{reading.id}} onclick="showReading()">{{ reading.reading_name }}</li>
                 {% endfor %}
@@ -25,11 +25,8 @@
 {% block reading %}
 <div id="reading" class="col-md-7">
     <p id="test2"></p>
-    <p id="post1" class="post1">
-        111222233333　
-    </p>
     {% for reading in readings %}
-    rea
+    
     {% endfor %}
 </div>
 {% endblock %}

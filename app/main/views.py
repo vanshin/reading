@@ -32,7 +32,8 @@ def input():
             db.session.add(sentence)
     return render_template('input.html',form=form)
 
-@main.route('/reading/<id>',methods=['GET','POST'])
+@main.route('/reading/<int:id>',methods=['GET','POST'])
 def reading(id):
-    reading = Reading.query.filter_by(id=id).first().to_ison()
+    
+    reading = Reading.query.filter_by(id=id).first().to_json()
     return jsonify(reading) 

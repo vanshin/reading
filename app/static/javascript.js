@@ -1,7 +1,7 @@
 $(document).ready(function () {
 			$(".post1").mouseup(getSentence);
 			$(".sidebar").click(addul)
-			 
+			$(".order").click(showReading)
 		});
 
 function getSentence(){
@@ -32,27 +32,33 @@ function addul(){
 }
 
 function showReading(){
+	
 	$(".reading_id").each(function(){
 		var $reading = $("#reading")
-		var $id;
+		var id;
 		var $test = $("#test")
 		var $reading = $("#reading")
 		$(this).click(function(){
-			var $id = $(this).attr("id");
-
-		})
-		$.ajax({
-			type:'GET',
-			url:'/reading',
-			data:{reading_id:$id},
-			dataType:'json'
-
-		}).done(function(data){
-			$.each(data,function(n,value){
-				var p = "";
-				p = "<p>" + value.reaing_body + "</p>";
+			id = $(this).attr("id");
+			$.ajax({
+				type:'GET',
+				url:'/reading/'+id,
+				dataType:'json'
+			}).done(function(data){
+				
+				
+				$.each(data,function(n,value){
+					if(n=="reading_body"){
+						p = "<p>" + value + "</p>";
+						$reading.prepend(p)
+					}
+					
+					
+				})
+			
 			})
-			$reading.prepend(p)
+
 		})
+		
 	});
 }

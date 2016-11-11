@@ -12,7 +12,7 @@
         {% for list in order_list %}
             <ui id="order" onclick=""><a href="#">{{ list }}</a>
                 {% for reading in readings %}
-                    <li class="reading_id" id={{reading.id}} onclick="showReading()">{{ reading.reading_name }}</li>
+                    <li id={{reading.id}} onclick="showReading()">{{ reading.reading_name }}</li>
                 {% endfor %}
             </ui>
         {% endfor %}

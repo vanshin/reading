@@ -1,7 +1,7 @@
 $(document).ready(function () {
 			$(".post1").mouseup(getSentence);
 			$(".sidebar").click(addul)
-			$(".order").click(showReading)
+			// $(".order").click(showReading)
 		});
 
 function getSentence(){
@@ -32,33 +32,66 @@ function addul(){
 }
 
 function showReading(){
-	
-	$(".reading_id").each(function(){
+	$(document).click(function(e){
+		var id = $(e.target).attr('id')
+		console.log('请求id：'+id)
 		var $reading = $("#reading")
-		var id;
-		var $test = $("#test")
-		var $reading = $("#reading")
-		$(this).click(function(){
-			id = $(this).attr("id");
-			$.ajax({
-				type:'GET',
-				url:'/reading/'+id,
-				dataType:'json'
-			}).done(function(data){
-				
-				
-				$.each(data,function(n,value){
-					if(n=="reading_body"){
-						p = "<p>" + value + "</p>";
-						$reading.prepend(p)
-					}
-					
-					
-				})
-			
+		$.ajax({
+			type:'GET',
+			url:'/reading/'+id,
+			dataType:'json'
+		}).done(function(data){
+			$.each(data,function(n,value){
+				if(n=="reading_body"){
+					p = "<p>" + value + "</p>";
+					$reading.prepend(p)
+				}
 			})
-
+	
+		}).fail(function(jqXHR,textStatus){
+			console.log("错误:"+textStatus)
 		})
+	
+	})
+	
+	
+	
+
+
+
+	// $(".reading_id").each(function(){
+	// 	var 
+			
+	// 		$test = $("#test")
+	// 		$reading = $("#reading")
 		
-	});
+
+	// 	var id = $(this).attr("id");
+	// 	console.log('请求id：'+id)
+	// 	if(id){
+	// 		$.ajax({
+	// 			type:'GET',
+	// 			url:'/reading/'+id,
+	// 			dataType:'json'
+	// 		}).done(function(data){
+	// 			$.each(data,function(n,value){
+	// 				if(n=="reading_body"){
+	// 					p = "<p>" + value + "</p>";
+	// 					$reading.prepend(p)
+	// 				}
+	// 			})
+		
+	// 		}).fail(function(jqXHR,textStatus){
+	// 			console.log("错误:"+textStatus)
+	// 		})
+	// 	}
+			
+
+		
+		
+	// }
 }
+
+// var app = new Vue({
+// 	el:'reading_id'
+// })

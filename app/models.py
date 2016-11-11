@@ -37,6 +37,16 @@ class Sentence(db.Model):
     comment = db.Column(db.Text)
     def __repf__(self):
         return '<Sentence %d>' % self.id
+    def to_json(self):
+        json_sentence = {
+            'id':self.id,
+            'reading_id':self.reading_id,
+            'sentence_body':self.phrase,
+            'grammar_c':self.grammar_c,
+            'grammar_j':self.grammar_j,
+            'comment':self.comment,
+            'translation':self.translation
+        }
 
 
 # class Word(db.Model):

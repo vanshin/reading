@@ -1,5 +1,5 @@
 $(document).ready(function () {
-			$(".post1").mouseup(getSentence);
+			$("#reading_content").mouseup(getSentence);
 			$(".sidebar").click(addul)
 			// $(".order").click(showReading)
 		});
@@ -42,11 +42,14 @@ function showReading(){
 			dataType:'json'
 		}).done(function(data){
 			$.each(data,function(n,value){
+				console.log("111")
+				$reading.empty()
 				if(n=="reading_body"){
-					p = "<p>" + value + "</p>";
-					$reading.prepend(p)
+					p = '<p id="reading_content">' + value + "</p>";
+					
 				}
 			})
+			$reading.prepend(p)
 	
 		}).fail(function(jqXHR,textStatus){
 			console.log("错误:"+textStatus)

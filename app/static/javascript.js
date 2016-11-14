@@ -53,14 +53,38 @@ $(".reading_list").click(function(e){
 $("div").delegate("span","click",function(e){
 	console.log("span")
 	
-	var _id = $(e.target).attr('id')
+	var txt = $(e.target).text()
+	
 	
 	var $test = $("#sentence_test")
-	var txt = $("[id='_id']").text()
+	
 	$test.text(txt)
 })
 
-
-// $(document).on("click",".reading_content",function(){
+$("#submit").click(function(){
+	var word = $("#word")
+	var phrase = $("phrase")
+	var grammar_c = $("grammar_c")
+	var grammar_j = $("grammar_j")
+	var comment = $("comment")
+	var translaiton = $("translaiton")
+	json_note = {
+		"word": word,
+		"phrase": phrase,
+		"grammar_c": grammar_c,
+		"grammar_j": grammar_j,
+		"comment": comment,
+		"translaiton": translaiton
+	}
+	$.ajax({
+		type: "POST",
+		url: "/sentence/notes",
+		data: json_note,
+		dataType: "json"
+	}).done(function(data){
+		alert("1")
+	})
+})
+// $(document).on("cli(ck",".reading_content",function(){
 // 	console.log("1")
 // })

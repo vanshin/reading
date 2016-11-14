@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% import 'bootstrap/wtf.html' as wtf %}
 {% block title %} index {% endblock %}
 
 
@@ -33,6 +33,31 @@
 <div class="col-md-5" id="control">
     <div id="selectSentence">
         <p class="test" id="sentence_test" ></p>
+        
+        <div>
+            <form>
+                单词：</br>
+                <input type="text" name="word" id="word">
+                <br>
+                短语：</br>
+                <input type="text" name="phrase" id="phrase">
+                <br>
+                词法：</br>
+                <input type="text" name="grammar_c" id="grammar_c">
+                <br>
+                句法：</br>
+                <input type="text" name="grammar_j" id="grammar_j">
+                <br>
+                翻译：</br>
+                <input type="text" name="translation" id="translation">
+                <br>
+                评论：</br>
+                <input type="text" name="comment" id="comment">
+                <br>
+                <input type="button" value="submit" id="submit">
+            </form>
+            
+        </div>
     </div>
     
     

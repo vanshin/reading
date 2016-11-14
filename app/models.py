@@ -1,15 +1,15 @@
 #coding=utf-8
+
 from . import db
 from datetime import datetime
 
 class Reading(db.Model):
     __tablename__ = 'readings'
-    id = db.Column(db.Integer,primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     reading_order = db.Column(db.Text)
     reading_name = db.Column(db.String(64))
     reading_body = db.Column(db.Text)
-    sentences = db.relationship('Sentence',backref='reading',lazy='dynamic')
-    
+    sentences = db.relationship('Sentence', backref='reading', lazy='dynamic')
     def __repf__(self):
         return '<Reading %r>' % self.reading_name
 
@@ -18,8 +18,9 @@ class Reading(db.Model):
             'id':self.id,
             'reading_order':self.reading_order,
             'reading_name':self.reading_name,
-            'reading_body':self.reading_body
-
+            'reading_body':self.reading_body,
+            'reading_sentences':{x.id:x.sentence_body for x in self.sentences}
+            # 'reading_sentences':[x.sentence_body for x in self.sentences]
         }
         return json_reading
 
@@ -38,15 +39,17 @@ class Sentence(db.Model):
     def __repf__(self):
         return '<Sentence %d>' % self.id
     def to_json(self):
+        """ return json data """
         json_sentence = {
             'id':self.id,
             'reading_id':self.reading_id,
-            'sentence_body':self.phrase,
+            'sentence_body':self.sentence_body,
             'grammar_c':self.grammar_c,
             'grammar_j':self.grammar_j,
             'comment':self.comment,
             'translation':self.translation
         }
+        return json_sentence
 
 
 # class Word(db.Model):

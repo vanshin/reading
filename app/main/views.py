@@ -1,15 +1,15 @@
 #codingutf-8
+from flask import render_template, jsonify
 from . import main
-from flask import render_template,jsonify
 from .forms import readingForm
-from ..models import Reading,Sentence
+from ..models import Reading, Sentence
 from .. import db
 
 @main.route('/')
 def index():
+    """ empty """
     readings = Reading.query.order_by(Reading.reading_order).all()
     order_list = set()
-    
     for reading in readings:
         order_list.add(reading.reading_order)
         
@@ -22,18 +22,27 @@ def input():
         reading_order = form.reading_order.data
         reading_name = form.reading_name.data
         reading_body = form.reading_body.data
-        sentences_list = reading_body.split('.')
+        sentences_list_tmp = reading_body.split('.')
+        sentences_list = list()
+        for sentence in sentences_list_tmp:
+            sentence = sentence.replace('\r\n', '').lstrip()
+            sentences_list.append(sentence)
         reading = Reading(reading_order=reading_order,reading_name=reading_name,reading_body=reading_body)
         db.session.add(reading)
         db.session.commit()
         reading_id = reading.id
         for sentence_body in sentences_list:
+            print sentence_body
             sentence = Sentence(reading_id=reading_id,sentence_body=sentence_body)
             db.session.add(sentence)
     return render_template('input.html',form=form)
 
-@main.route('/reading/<int:id>',methods=['GET'])
+@main.route('/reading/<int:id>', methods=['GET'])
 def reading(id):
-    
     reading = Reading.query.filter_by(id=id).first().to_json()
     return jsonify(reading) 
+
+@main.route('/sentence/<int:id>', methods=['GET'])
+def sentence(id):
+    sentence = Sentence.query.filter_by(id=id).first().to_json()
+    return jsonify(sentence)

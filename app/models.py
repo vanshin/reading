@@ -44,6 +44,7 @@ class Sentence(db.Model):
             'id':self.id,
             'reading_id':self.reading_id,
             'sentence_body':self.sentence_body,
+            'phrase':self.phrase,
             'grammar_c':self.grammar_c,
             'grammar_j':self.grammar_j,
             'comment':self.comment,

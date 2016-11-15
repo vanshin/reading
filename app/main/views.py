@@ -1,8 +1,9 @@
 #codingutf-8
 import json
-from flask import render_template, jsonify,request
+# import requests
+from flask import render_template, jsonify, request
 from . import main
-from .forms import readingForm,controlForm
+from .forms import readingForm, controlForm
 from ..models import Reading, Sentence
 from .. import db
 
@@ -48,12 +49,23 @@ def sentence(id):
     return jsonify(sentence)
 
 @main.route('/sentence/notes/<int:id>',methods=['PUT'])
-def notes(id):
+def edit_notes(id):
     sentence = Sentence.query.get_or_404(id)
-    json_note = request.get_data()
-    print(json_note)
-    print("1")
+    json_notes = request.get_json(force=True, silent=True)
+    phrase = json_notes.get("phrase")
+    grammar_c = json_notes.get("grammar_c")
+    grammar_j = json_notes.get("grammar_j")
+    comment = json_notes.get("comment")
+    translation = json_notes.get("translation")
+    sentence.phrase = phrase
+    sentence.grammar_c = grammar_c
+    sentence.grammar_j = grammar_j
+    sentence.comment = comment
+    sentence.translation = translation
+    db.session.add(sentence)
+    return jsonify(sentence.to_json())
 
-    aa = request.get_json()
-    print(aa)
-    return "1"
+@main.route('/sentence/notes/<int:id>',methods=['GET'])
+def get_notes(id):
+    sentence = Sentence.query.get_or_404(id)
+    return jsonify(sentence.to_json())

@@ -6,8 +6,8 @@
 
 {% block sidebar %}
 <div id="sidebar" class="col-md-2">
-    <button id="addul" onclick="addul()">添加序列</button>
-    <input id="inputul" type="text" name="序列名" value="">
+    <!--<button id="addul" onclick="addul()">添加序列</button>
+    <input id="inputul" type="text" name="序列名" value="">-->
     <div>
         {% for list in order_list %}
             <ui id="order" onclick=""><a href="#">{{ list }}</a>
@@ -33,7 +33,13 @@
 <div class="col-md-5" id="control">
     <div id="selectSentence">
         <p class="test" id="sentence_test" ></p>
-        
+        <div id="showNotes">
+            <p id="phrase"></p>
+            <p id="grammar_c"></p>
+            <p id="grammar_j"></p>
+            <p id="translation"></p>
+            <p id="comment"></p>
+        </div>
         <div>
             <form>
                 <!--单词：</br>
@@ -59,6 +65,7 @@
             
         </div>
     </div>
+    
     
     
 </div>

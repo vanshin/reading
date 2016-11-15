@@ -1,4 +1,5 @@
 #codingutf-8
+import json
 from flask import render_template, jsonify,request
 from . import main
 from .forms import readingForm,controlForm
@@ -49,10 +50,10 @@ def sentence(id):
 @main.route('/sentence/notes/<int:id>',methods=['PUT'])
 def notes(id):
     sentence = Sentence.query.get_or_404(id)
-    
-    # print request.get_json() 
-    # sentence.phrase = request.json.get('phrase',post.phrase)
-    # db.session.add(sentence)
-    # db.session.commit()
-    # return jsonify(sentence.to_json)
-    
+    json_note = request.get_data()
+    print(json_note)
+    print("1")
+
+    aa = request.get_json()
+    print(aa)
+    return "1"

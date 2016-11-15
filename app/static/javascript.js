@@ -69,7 +69,7 @@ $("#submit").click(function(){
 	var grammar_c = $("#grammar_c").val()
 	var grammar_j = $("#grammar_j").val()
 	var comment = $("#comment").val()
-	var translaiton = $("#translaiton").val()
+	var translaiton = $("#translation").val()
 	console.log(phrase)
 	json_note = {
 		
@@ -83,7 +83,8 @@ $("#submit").click(function(){
 		type: "PUT",
 		url: "/sentence/notes/"+id,
 		data: json_note,
-		dataType: "json"
+		dataType: "json",
+		contentType: "application/json"
 	}).done(function(data){
 		alert("1")
 	})

@@ -46,7 +46,13 @@ def sentence(id):
     sentence = Sentence.query.filter_by(id=id).first().to_json()
     return jsonify(sentence)
 
-@main.route('/sentence/notes',methods=['POST'])
-def notes():
-   note = request.json
+@main.route('/sentence/notes/<int:id>',methods=['PUT'])
+def notes(id):
+    sentence = Sentence.query.get_or_404(id)
+    
+    # print request.get_json() 
+    # sentence.phrase = request.json.get('phrase',post.phrase)
+    # db.session.add(sentence)
+    # db.session.commit()
+    # return jsonify(sentence.to_json)
     

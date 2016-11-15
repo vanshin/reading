@@ -50,9 +50,9 @@ class Sentence(db.Model):
             'translation':self.translation
         }
         return json_sentence
-    def from_json(json_sentence):
-        """ get json_sentence """
-        json_sentence.get()
+    # def from_json(json_sentence):
+    #     """ get json_sentence """
+    #     json_sentence.get()
 
 
 # class Word(db.Model):

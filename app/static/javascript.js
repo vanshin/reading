@@ -37,7 +37,8 @@ $(".reading_list").click(function(e){
 			$.each(data,function(n,value){
 				if(n=="reading_sentences"){
 					for	(x in value){
-						span = span + '<span class="reading_content">' + value[x] + ". " + "</span>";
+						
+						span = span + '<span class="reading_content" sen_id="' + x +'" >' + value[x] + ". " + "</span>";
 					}					
 				}
 			})
@@ -51,25 +52,27 @@ $(".reading_list").click(function(e){
 	
 
 $("div").delegate("span","click",function(e){
-	console.log("span")
+	
 	
 	var txt = $(e.target).text()
-	
+	var id = $(e.target).attr("sen_id")
+	console.log("sen_id"+id)
 	
 	var $test = $("#sentence_test")
-	
+	$test.attr("sen_id",id)
 	$test.text(txt)
 })
 
 $("#submit").click(function(){
-	var word = $("#word")
-	var phrase = $("phrase")
-	var grammar_c = $("grammar_c")
-	var grammar_j = $("grammar_j")
-	var comment = $("comment")
-	var translaiton = $("translaiton")
+	var id = $("#sentence_test").attr("sen_id")
+	var phrase = $("#phrase").val()
+	var grammar_c = $("#grammar_c").val()
+	var grammar_j = $("#grammar_j").val()
+	var comment = $("#comment").val()
+	var translaiton = $("#translaiton").val()
+	console.log(phrase)
 	json_note = {
-		"word": word,
+		
 		"phrase": phrase,
 		"grammar_c": grammar_c,
 		"grammar_j": grammar_j,
@@ -77,8 +80,8 @@ $("#submit").click(function(){
 		"translaiton": translaiton
 	}
 	$.ajax({
-		type: "POST",
-		url: "/sentence/notes",
+		type: "PUT",
+		url: "/sentence/notes/"+id,
 		data: json_note,
 		dataType: "json"
 	}).done(function(data){

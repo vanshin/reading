@@ -35,8 +35,7 @@
         <p class="test" id="sentence_test" ></p>
         <div id="showNotes">
             <p id="phrase"></p>
-            <p id="grammar_c"></p>
-            <p id="grammar_j"></p>
+            <p id="grammar"></p>
             <p id="translation"></p>
             <p id="comment"></p>
         </div>
@@ -46,19 +45,16 @@
                 <input type="text" name="word" id="word">
                 <br>-->
                 短语：</br>
-                <input type="text" name="phrase" id="phrase">
+                <input type="text" name="phrase" id="phrase" val="">
                 <br>
-                词法：</br>
-                <input type="text" name="grammar_c" id="grammar_c">
-                <br>
-                句法：</br>
-                <input type="text" name="grammar_j" id="grammar_j">
+                语法：</br>
+                <input type="text" name="grammar" id="grammar" val="">
                 <br>
                 翻译：</br>
-                <input type="text" name="translation" id="translation">
+                <input type="text" name="translation" id="translation" val="">
                 <br>
                 评论：</br>
-                <input type="text" name="comment" id="comment">
+                <input type="text" name="comment" id="comment" val="">
                 <br>
                 <input type="button" value="submit" id="submit">
             </form>
@@ -69,4 +65,8 @@
     
     
 </div>
+{% endblock %}
+
+{% block js %}
+<script src="../static/javascript.js"></script>
 {% endblock %}

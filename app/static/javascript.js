@@ -1,16 +1,4 @@
-// function getSentence(){
-// 	// var txt;
-// 	// var parentOffset = $(this).offset();
-// 	// var x = e.pageX - parentOffset.left;
-// 	// var y = e.pageY - parentOffset.top;
-// 	var selectSentence = $("#selectSentence")
-// 	txt = window.getSelection();
-// 	if (txt.toString().length > 1) {
-// 		// txt = $("<p></p>").text(txt);
-// 		console.log(txt)
-// 		$("p.test").text(txt);
-		
-// 	}
+
 
 function addul(){
 	if ((tmp = $("inputul").val()) == " ") {
@@ -26,16 +14,19 @@ function addul(){
 
 function clearShowing(){
 	var phrase = $("p#phrase")
-		grammar_c = $("p#grammar_c")
-		grammar_j = $("p#grammar_j")
+		grammar = $("p#grammar")
 		comment = $("p#comment")
 		translation = $("p#translation")
 	phrase.empty()
-	grammar_c.empty()
-	grammar_j.empty()
+	grammar.empty()
 	comment.empty()
 	translation.empty()
 }
+
+function clearForm(){
+	$("input:text").val("")
+}
+
 $(".reading_list").click(function(e){
 	var id = $(e.target).attr('id')
 	var $reading = $("#reading")
@@ -46,8 +37,8 @@ $(".reading_list").click(function(e){
 	}).done(function(data){
 		$reading.empty()
 		var span = ""
-		$.each(data,function(n,value){
-			if(n=="reading_sentences"){
+		$.each(data,function(index,value){
+			if(index=="reading_sentences"){
 				for	(x in value){
 					span = span + '<span class="reading_content" sen_id="' + x +'" >' + value[x] + ". " + "</span>";
 				}					
@@ -66,33 +57,30 @@ $("div").delegate("span","click",function(e){
 		id = $(e.target).attr("sen_id")
 		$test = $("#sentence_test")
 		phrase = $("p#phrase")
-		grammar_c = $("p#grammar_c")
-		grammar_j = $("p#grammar_j")
+		grammar = $("p#grammar")
 		comment = $("p#comment")
 		translation = $("p#translation")
 	$test.attr("sen_id",id)
 	$test.text(txt)
 	$.ajax({
 		type: "GET",
-		url: "/sentence/notes/"+id,
+		url: "/sentence/"+id+"/note",
 		dataType: "json",
 	}).done(function(data){
 		clearShowing()
+		clearForm()
 		$.each(data,function(key,value){
-			
-			if(key=="phrase" && value != null){
+			if(key=="phrase" && value != "" && value != null){
 				phrase.text("短语："+value)
 			}
-			if(key=="grammar_c" && value != null){
-				grammar_c.text("词法："+value)
+			
+			if(key=="grammar" && value != "" && value != null){
+				grammar.text("语法："+value)
 			}
-			if(key=="grammar_j" && value != null){
-				grammar_j.text("句法："+value)
-			}
-			if(key=="comment" && value != null){
+			if(key=="comment" && value != "" && value != null){
 				comment.text("评论："+value)
 			}
-			if(key=="translation" && value != null){
+			if(key=="translation" && value != "" && value != null){
 				translation.text("翻译："+value)
 			}
 		})
@@ -102,51 +90,52 @@ $("div").delegate("span","click",function(e){
 $("#submit").click(function(){
 	var id = $("#sentence_test").attr("sen_id")
 		phrase = $("input#phrase").val()
-		grammar_c = $("input#grammar_c").val()
-		grammar_j = $("input#grammar_j").val()
+		grammar = $("input#grammar").val()
 		comment = $("input#comment").val()
 		translation = $("input#translation").val()
 		pphrase = $("p#phrase")
-		pgrammar_c = $("p#grammar_c")
-		pgrammar_j = $("p#grammar_j")
+		pgrammar = $("p#grammar")
 		pcomment = $("p#comment")
 		ptranslation = $("p#translation")
 	json_note = {
 		
 		"phrase": phrase,
-		"grammar_c": grammar_c,
-		"grammar_j": grammar_j,
+		"grammar": grammar,
 		"comment": comment,
 		"translation": translation
 	}
 	$.ajax({
 		type: "PUT",
-		url: "/sentence/notes/"+id,
+		url: "/sentences/"+id+"/note",
 		data: JSON.stringify(json_note),
 		dataType: "json",
 		contentType: "application/json"
 	}).done(function(data){
 		clearShowing()
 		$.each(data,function(key,value){
-			if(key=="phrase" && value != null ){
+			if(key=="phrase" && value != "" && value != null){
 				pphrase.text("短语："+value)
 			}
-			if(key=="grammar_c" && value != null){
-				pgrammar_c.text("词法："+value)
+			if(key=="grammar" && value != "" && value != null){
+				pgrammar.text("语法："+value)
 			}
-			if(key=="grammar_j" && value != null){
-				pgrammar_j.text("句法："+value)
-			}
-			if(key=="comment" && value != null){
+			if(key=="comment" && value != "" && value != null){
 				pcomment.text("评论："+value)
 			}
-			if(key=="translation" && value != null){
+			if(key=="translation" && value != "" && value != null){
 				ptranslation.text("翻译："+value)
 			}
+			
 
 		})
+		clearForm()
 	})
 })
-// $(document).on("cli(ck",".reading_content",function(){
-// 	console.log("1")
-// })
+
+
+
+$("#li-regi").click(function(){
+    location.pathname = "/session/new"
+})
+
+

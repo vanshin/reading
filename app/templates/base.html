@@ -1,5 +1,6 @@
 {% extends "bootstrap/base.html" %}
 {% block title %}  {% endblock %}
+
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="../static/style.css">
 <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
@@ -20,7 +21,7 @@
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="/">HOME</a></li>
-                <li><a href="{{ url_for('.input') }}">input</a></li>
+                <li><a href="{{ url_for('main.input') }}">input</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
@@ -36,7 +37,8 @@
                 <button type="submit" class="btn btn-default">Submit</button>
             </form>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Link</a></li>
+                <li id="li-regi"><a href="javascript:;">regi</a></li>
+                <li id="li-login"><a href="javascript:;">login</a></li>
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
@@ -66,6 +68,9 @@
 {% block scripts %}
 <script src="../static/vue.js"></script>
 <script src="../static/jquery.min.js"></script>
-<script src="../static/javascript.js"></script>
+<script src="../static/auth.js"></script>
 <script src="../static/bootstrap/js/bootstrap.js"></script>
+
+{% block js %}
+{% endblock %}
 {% endblock %}

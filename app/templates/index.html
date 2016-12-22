@@ -6,16 +6,8 @@
 
 {% block sidebar %}
 <div id="sidebar" class="col-md-2">
-    <!--<button id="addul" onclick="addul()">添加序列</button>
-    <input id="inputul" type="text" name="序列名" value="">-->
-    <div>
-        {% for list in order_list %}
-            <ui id="order" onclick=""><a href="#">{{ list }}</a>
-                {% for reading in readings %}
-                    <li class="reading_list" id={{reading.id}} >{{ reading.reading_name }}</li>
-                {% endfor %}
-            </ui>
-        {% endfor %}
+    <div id="order_div">
+        
     </div>
     
     
@@ -31,37 +23,53 @@
 
 {% block control %}
 <div class="col-md-5" id="control">
-    <div id="selectSentence">
-        <p class="test" id="sentence_test" ></p>
-        <div id="showNotes">
+    <div class="selectedSentence">
+        <p>句子：</p>
+        <p class="sentence"></p>
+        <br>
+        
+        <div id="showSenNotes">
             <p id="phrase"></p>
             <p id="grammar"></p>
             <p id="translation"></p>
-            <p id="comment"></p>
-        </div>
-        <div>
-            <form>
-                <!--单词：</br>
-                <input type="text" name="word" id="word">
-                <br>-->
-                短语：</br>
-                <input type="text" name="phrase" id="phrase" val="">
-                <br>
-                语法：</br>
-                <input type="text" name="grammar" id="grammar" val="">
-                <br>
-                翻译：</br>
-                <input type="text" name="translation" id="translation" val="">
-                <br>
-                评论：</br>
-                <input type="text" name="comment" id="comment" val="">
-                <br>
-                <input type="button" value="submit" id="submit">
-            </form>
-            
         </div>
     </div>
-    
+
+    <div id="selectedWord">
+        <p>单词：</p>        
+        <p class="word"></p>
+        <br>
+
+        <div id="showWordNotes">
+            <p id="Chinese"></p>
+            <p id="Phonogram"></p>
+        </div>
+    </div>
+    <div class="sentenceForm">
+        <form>
+            短语：</br>
+            <textarea rows="3" cols="15" name="phrase" id="phrase" val=""></textarea>
+            <br>
+            语法：</br>
+            <textarea rows="3" cols="15" name="grammar" id="grammar" val=""></textarea>
+            <br>
+            翻译：</br>
+            <textarea rows="3" cols="15" name="translation" id="translation" val=""></textarea>
+            <br>
+            <input type="button" value="提交句子" id="submit">
+        </form>
+    </div>
+    <div class="wordForm">
+        <form>
+            中文：</br>
+            <input type="text" name="Chinese" id="Chinese" val="">
+            <br>
+            音标：</br>
+            <input type="text" name="Phonogram" id="Phonogram" val="">
+            <br>
+            <input type="button" value="提交单词" id="submitword">
+        </form>
+    </div>
     
     
 </div>

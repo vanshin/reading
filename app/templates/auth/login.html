@@ -1,19 +1,16 @@
 {% extends "base.html" %}
 {% import 'bootstrap/wtf.html' as wtf %}
-{% block content %}
-<div>
-    <p>LOGIN IN</p>
-    <form>
-        用户名：<br>
-        <input type="text" name="username" value=""><br>
-        密码：<br>
-        <input type="text" name="password" value=""><br>
-        <input type="submit" name="submit" value="提交" id="submit"><br>   
-    </form>
-</div>
 
+
+{% block title %}
+    登录
 {% endblock %}
 
-{% block js %}
-<script src="../static/auth.js"></script>
+{% block reading %}
+    <div class="page-header">
+        <h1>登录</h1>
+    </div>
+    <div class="col-md-4">
+        {{ wtf.quick_form(form) }}
+    </div>
 {% endblock %}

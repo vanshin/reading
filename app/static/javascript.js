@@ -1,6 +1,52 @@
+$(document).ready(function(){
+	var order_ul = $('div#order_ul')
+	var order_div = $('ul#order_div')
+	var	li = document.createElement('li')
+	$.ajax({
+		type:'GET',
+		url:'/current_user/id',
+		dataType:'json'
+	}).done(function(data){
+		$.each(data, function(key, value){
+			if (key=='id'){
+				addul2(value)
+			}
+		})
+	})
+})
 
+function addul2(id){
+	var order_div = $('#order_div')
+	var order = []
+	var	name = []
+	var id = id
+	$.ajax({
+		type: 'GET',
+		url: '/user/'+id+'/list',
+		dataType: 'json'
+	}).done(function(data){
+		$.each(data, function(key, value){
+			if (key=='reading_name'){
+				console.log(value)
+				for (i in value){
+					name.push(value[i])
+				}
+			}
+		})
+		$.each(data, function(key, value){
+			if (key=='reading_order') {
+				for (i in value){
+					var ul = document.createElement('UL')
+					ul.innerHTML = value[i]
+					order_div.append(ul)
+				}	
+			}
+		})
+					
+	})
+}
 
-function addul(){
+function addul1(){
 	if ((tmp = $("inputul").val()) == " ") {
 		alert($("inputul").val())
 	}else{
@@ -23,9 +69,25 @@ function clearShowing(){
 	translation.empty()
 }
 
-function clearForm(){
-	$("input:text").val("")
+function clearWordShowing(){
+	var Chinese = $("p#Chinese")
+		Phonogram = $("p#Phonogram")
+	Chinese.empty()
+	Phonogram.empty()
 }
+
+function clearWordForm(){
+	var Chinese = $("input#Chinese")
+		Phonogram = $("input#Phonogram")
+	Chinese.val("")
+	Phonogram.val("")
+}
+
+function clearForm(){
+	$("textarea:text").val("")
+}
+
+
 
 $(".reading_list").click(function(e){
 	var id = $(e.target).attr('id')
@@ -51,17 +113,49 @@ $(".reading_list").click(function(e){
 	})
 })
 	
+$("div").delegate("span.word_content", "click", function(e){
+	var id = $(e.target).attr("word_id")
+		Chinese = $("p#Chinese")
+		Phonogram = $("p#Phonogram")
+		wordshowing = $("p.word")
+		txt = $(e.target).text()
+		word = $("p.word")
+	word.attr("word_id", id)
+	wordshowing.text(txt)
+	$.ajax({
+		type: "GET",
+		url: "/word/"+id+"/note",
+		dataType: "json"
+	}).done(function(data){
+		clearWordShowing()
+		clearForm()
+		$.each(data, function(key, value){
+			if (key=="code" && value==404){
+				Chinese.text("中文： 未填写")
+				Phonogram.text("音标： 未填写")
+			} else{
+				if (key=="Chinese" && value != "" && value != null){
+					Chinese.text("中文：" + value)
+				}
+				if (key=="Phonogram" && value != "" && value != null){
+					Phonogram.text("音标：" + value)
+				}
+			}
+			
+		})
+	})
+})
 
-$("div").delegate("span","click",function(e){
+$("div").delegate("span.reading_content","click",function(e){
 	var txt = $(e.target).text()
 		id = $(e.target).attr("sen_id")
-		$test = $("#sentence_test")
+		sentence = $("p.sentence")
 		phrase = $("p#phrase")
 		grammar = $("p#grammar")
 		comment = $("p#comment")
 		translation = $("p#translation")
-	$test.attr("sen_id",id)
-	$test.text(txt)
+
+	sentence.attr("sen_id",id)
 	$.ajax({
 		type: "GET",
 		url: "/sentence/"+id+"/note",
@@ -85,57 +179,99 @@ $("div").delegate("span","click",function(e){
 			}
 		})
 	})
+
+	$.ajax({
+		type: "GET",
+		url: "/sentence/"+id,
+		dataType: "json",
+	}).done(function(data){
+		sentence.empty()
+		var span = ""
+		$.each(data, function(key, value){
+			if (key=="words"){
+				for (x in value){
+					span = span + '<span class="word_content" word_id="' + x +'" >' + value[x] + " " + "</span>";
+				}
+			}
+		})
+		sentence.prepend(span)
+	})
+})
+
+$("#submitword").click(function(){
+	var id = $("p.word").attr("word_id")
+		Chinese = $("input#Chinese").val()
+		Phonogram = $("input#Phonogram").val()
+		
+
+		pChinese = $("p#Chinese")
+		pPhonogram = $("p#Phonogram")
+	
+	json_note = {
+		"word_id": id,
+		"Chinese": Chinese,
+		"Phonogram": Phonogram,
+	}
+	$.ajax({
+		type: "PUT",
+		url: "/word/"+id+"/note",
+		data: JSON.stringify(json_note),
+		contentType: "application/json"
+	}).done(function(data){
+		clearWordShowing()
+		$.each(data, function(key, value){
+			if(key=="Chinese" && value != "" && value != null){
+				pChinese.text("中文："+value)
+			}
+			if(key=="Phonogram" && value != "" && value != null){
+				pPhonogram.text("音标："+value)
+			}
+		})
+		clearWordForm()
+	})
 })
 
 $("#submit").click(function(){
-	var id = $("#sentence_test").attr("sen_id")
-		phrase = $("input#phrase").val()
-		grammar = $("input#grammar").val()
-		comment = $("input#comment").val()
-		translation = $("input#translation").val()
+	var id = $("p.sentence").attr("sen_id")
+		phrase = $("textarea#phrase").val()
+		grammar = $("textarea#grammar").val()
+		translation = $("textarea#translation").val()
+
 		pphrase = $("p#phrase")
 		pgrammar = $("p#grammar")
-		pcomment = $("p#comment")
 		ptranslation = $("p#translation")
 	json_note = {
-		
 		"phrase": phrase,
 		"grammar": grammar,
-		"comment": comment,
 		"translation": translation
 	}
 	$.ajax({
 		type: "PUT",
-		url: "/sentences/"+id+"/note",
+		url: "/sentence/"+id+"/note",
 		data: JSON.stringify(json_note),
 		dataType: "json",
 		contentType: "application/json"
 	}).done(function(data){
 		clearShowing()
 		$.each(data,function(key,value){
-			if(key=="phrase" && value != "" && value != null){
-				pphrase.text("短语："+value)
-			}
 			if(key=="grammar" && value != "" && value != null){
 				pgrammar.text("语法："+value)
 			}
-			if(key=="comment" && value != "" && value != null){
-				pcomment.text("评论："+value)
+			if(key=="phrase" && value != "" && value != null){
+				pphrase.text("短语："+value)
 			}
 			if(key=="translation" && value != "" && value != null){
 				ptranslation.text("翻译："+value)
 			}
-			
-
 		})
 		clearForm()
 	})
 })
 
-
-
 $("#li-regi").click(function(){
-    location.pathname = "/session/new"
+    location.pathname = "/regi"
 })
 
-
+$("#li-login").click(function(){
+	location.pathname = "/login"
+})

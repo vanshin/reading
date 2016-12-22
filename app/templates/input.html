@@ -1,5 +1,21 @@
 {% extends 'base.html' %}
 {% import 'bootstrap/wtf.html' as wtf %}
 {% block reading %}
-{{ wtf.quick_form(form) }}
+
+<form>
+    序列：<br>
+    <input type="text" name="order" id="order" value="">
+    <br>
+    标题：<br>
+    <input type="text" name="name" id="name" value="">
+    <br>
+    阅读理解：<br>
+    <textarea rows="5" cols="50" id="reading"></textarea>
+    <br>
+    <input type="button" id="submitreading" value="提交文章">
+</form>
+
+{% endblock %}
+{% block js %}
+<script src="../static/input.js"></script>
 {% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block content %}
+
+<div id="regi">
+    <p>regi </p>
+    <form method="POST">
+        用户名：<br>
+        <input type="text" name="username" value="" id="username"><br>
+        密码：<br>
+        <input type="text" name="password" value="" id="password"><br>
+        重复密码：<br>
+        <input type="text" name="password2" value="" id="password2"><br>
+        <input type="button" value="提交" id="submitus" formmethod="POST"><br>   
+    </form>
+    
+</div>
+
+
+{% endblock %}
+
+

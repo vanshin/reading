@@ -28,3 +28,12 @@ $("#submitus").click(function(){
     
 
 })
+
+$("#li-regi").click(function(){
+    location.pathname = "/regi"
+})
+
+$("#li-login").click(function(){
+	location.pathname = "/login"
+})
+

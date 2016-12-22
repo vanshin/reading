@@ -1,14 +1,14 @@
-"""new model
+"""one to one
 
-Revision ID: 1840a48dc3c8
-Revises: 5ad05cfe51
-Create Date: 2016-11-30 19:43:30.998687
+Revision ID: db0335bbc66
+Revises: 3281d538bc59
+Create Date: 2016-12-19 23:40:00.946133
 
 """
 
 # revision identifiers, used by Alembic.
-revision = '1840a48dc3c8'
-down_revision = '5ad05cfe51'
+revision = 'db0335bbc66'
+down_revision = '3281d538bc59'
 
 from alembic import op
 import sqlalchemy as sa

@@ -13,7 +13,8 @@ class Reading(db.Model):
     reading_name = db.Column(db.String(64))
     reading_body = db.Column(db.Text)
     editors = db.Column(db.String(64))
-    sentences = db.relationship('Sentence', backref='reading', lazy='dynamic')
+    sentences = db.relationship('Sentence', backref='reading', lazy='dynamic', cascade="delete")
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def __repf__(self):
         return '<Reading %r>' % self.reading_name
@@ -25,17 +26,18 @@ class Reading(db.Model):
             'reading_name': self.reading_name,
             'reading_body': self.reading_body,
             'reading_sentences': {x.id: x.sentence_body for x in self.sentences}
-            # 'reading_sentences':[x.sentence_body for x in self.sentences]
         }
         return json_reading
-
 
 class Sentence(db.Model):
     __tablename__ = 'sentences'
     id = db.Column(db.Integer, primary_key=True)
     reading_id = db.Column(db.Integer, db.ForeignKey('readings.id'))
-    words = db.relationship('Word', backref='sentence', lazy='dynamic')
-    sentence_notes = db.relationship('Sentence_Note', backref='sentence', lazy='dynamic')
+    words = db.relationship('Word', backref='sentence', lazy='dynamic', cascade='all, delete')
+    sentence_notes = db.relationship('Sentence_Note',
+                                     backref='sentence',
+                                     lazy='dynamic',
+                                     cascade='delete')
     sentence_body = db.Column(db.Text)
     comment = db.Column(db.Text)
 
@@ -44,9 +46,13 @@ class Sentence(db.Model):
 
     def to_json(self):
         """ return json data """
+        words = list()
+        for word in self.words:
+            words.append(word.word_body)
         json_sentence = {
             'id': self.id,
-            'sentence_body': self.sentence_body
+            'sentence_body': self.sentence_body,
+            'words': {x.id :x.word_body for x in self.words}
         }
         return json_sentence
 
@@ -75,8 +81,8 @@ class Sentence_Note(db.Model):
         """ 生成json数据 """
         json_sentence_note = {
             'phrase': self.phrase,
-            'grammer': self.grammar,
-            'translation': self.translation 
+            'grammar': self.grammar,
+            'translation': self.translation
         }
         return json_sentence_note
 
@@ -85,7 +91,11 @@ class Word(db.Model):
     __tablename__ = 'words'
     id = db.Column(db.Integer, primary_key=True)
     sentence_id = db.Column(db.Integer, db.ForeignKey('sentences.id'))
-    word_note = db.relationship('Word_Note', backref='word', lazy='dynamic', uselist='False')
+    word_note = db.relationship('Word_Note',
+                                backref='word',
+                                lazy='dynamic',
+                                uselist='False',
+                                cascade="delete",)
     word_body = db.Column(db.String(32))
 
     def to_json(self):
@@ -94,6 +104,7 @@ class Word(db.Model):
             "id": self.id,
             "word_body": self.word_body
         }
+        return json_word
 
 class Word_Note(db.Model):
     """ word_note model """
@@ -102,7 +113,14 @@ class Word_Note(db.Model):
     word_id = db.Column(db.Integer, db.ForeignKey('words.id'))
     Chinese = db.Column(db.String(64))
     Phonogram = db.Column(db.String(32))
-    
+
+    def to_json(self):
+        json_word_note = {
+            "id": self.id,
+            "Chinese": self.Chinese,
+            "Phonogram": self.Phonogram
+        }
+        return json_word_note
 
 class User(db.Model, UserMixin):
     """ user model """
@@ -114,6 +132,7 @@ class User(db.Model, UserMixin):
     regi_time = db.Column(db.DateTime(), default=datetime.utcnow)
     avatar_hash = db.Column(db.String(64))
     location = db.Column(db.String(64))
+    readings = db.relationship('Reading', backref='user', lazy='dynamic')
 
     def to_json(self):
         json_user = {
@@ -123,6 +142,18 @@ class User(db.Model, UserMixin):
             "regi_time": self.regi_time,
             "location": self.location
         }
+        return json_user
+
+    @property
+    def password(self):
+        raise AttributeError("密码不是一个可读的属性")
+
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 @login_manager.user_loader
 def load_user(user_id):

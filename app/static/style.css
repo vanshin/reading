@@ -1,20 +1,21 @@
-.post1 {
-    word-wrap: break-word;
-    word-break: break-all;
-    
-}
-
-.test {
-    color: red;
-}
-
-.reading_content {
-    
-    margin: 10px 4px 10px 4px;
-    /*background-color: #CDC9C9; */
-}
 span:hover {
-    background-color: #CDC9C9; 
+    background-color: #CDC9C9;
+    border-radius: 9px;
+}
+
+.selectedSentence {
+    border: 1px;
+    border-color: gray;
+    border-style: solid;
+    border-radius: 5px; 
+}
+
+#selectedWord {
+    margin-top: 10px;
+    border: 1px;
+    border-color: gray;
+    border-style: solid; 
+    border-radius: 5px; 
 }
 
 #regi {

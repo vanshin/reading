@@ -1,13 +1,12 @@
 {% extends 'base.html' %}
 {% import 'bootstrap/wtf.html' as wtf %}
-{% block title %} index {% endblock %}
+{% block title %} 首页 {% endblock %}
 
 
 
 {% block sidebar %}
 <div id="sidebar" class="col-md-2">
-    <div id="order_div">
-        
+    <div id="order_div">        
     </div>
     
     
@@ -27,7 +26,7 @@
         <p>句子：</p>
         <p class="sentence"></p>
         <br>
-        
+         
         <div id="showSenNotes">
             <p id="phrase"></p>
             <p id="grammar"></p>
@@ -46,28 +45,28 @@
         </div>
     </div>
     <div class="sentenceForm">
-        <form>
+        <form class="form-group">
             短语：</br>
-            <textarea rows="3" cols="15" name="phrase" id="phrase" val=""></textarea>
+            <textarea rows="3" cols="15" name="phrase" id="phrase" class="form-control" value=""></textarea>
             <br>
             语法：</br>
-            <textarea rows="3" cols="15" name="grammar" id="grammar" val=""></textarea>
+            <textarea rows="3" cols="15" name="grammar" id="grammar" class="form-control" value=""></textarea>
             <br>
             翻译：</br>
-            <textarea rows="3" cols="15" name="translation" id="translation" val=""></textarea>
+            <textarea rows="3" cols="15" name="translation" id="translation" class="form-control" value=""></textarea>
             <br>
-            <input type="button" value="提交句子" id="submit">
+            <input type="button" value="提交句子" id="submit" class="btn btn-default">
         </form>
     </div>
     <div class="wordForm">
         <form>
             中文：</br>
-            <input type="text" name="Chinese" id="Chinese" val="">
+            <input type="text" name="Chinese" id="Chinese" class="form-control" val="">
             <br>
             音标：</br>
-            <input type="text" name="Phonogram" id="Phonogram" val="">
+            <input type="text" name="Phonogram" id="Phonogram" class="form-control" val="">
             <br>
-            <input type="button" value="提交单词" id="submitword">
+            <input type="button" value="提交单词" id="submitword" class="btn btn-default">
         </form>
     </div>
     

@@ -1,6 +1,12 @@
 {% extends "bootstrap/base.html" %}
 {% block title %}  {% endblock %}
 
+{% block head %}
+{{ super() }}
+<!--<link rel="shortcut icon" href="{{ url_for('static', filename='note.png') }}" type="image/x-icon">-->
+<link rel="icon" href="{{ url_for('static', filename='note.png') }}" type="image/x-icon">
+{% endblock %}
+
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="../static/style.css">
 <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">

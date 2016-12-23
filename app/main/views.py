@@ -33,15 +33,17 @@ def get_reading_list(id):
     readings = User.query.get_or_404(id).readings
     if readings:
         output(to_json=False)
-    print readings
-    reading_order = list({x.reading_order for x in readings})
-    reading_name = [x.reading_name for x in readings]
-    print reading_name
-    print reading_order
-    data = {
-        "reading_order": reading_order,
-        "reading_name": reading_name
-    }
+
+    order_set = {x.reading_order for x in readings}
+    data = {}
+
+    for order in order_set:
+        name_dict = {}
+        for x in Reading.query.filter_by(reading_order=order).all():
+            name_dict[x.id] = x.reading_name
+        data[order] = name_dict
+
+    # data = {x:y for x in order_list for y in name_list}
     return output(data=data, to_json=False)
 
 @main.route('/reading', methods=['POST'])

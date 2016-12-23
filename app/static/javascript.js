@@ -17,31 +17,30 @@ $(document).ready(function(){
 
 function addul2(id){
 	var order_div = $('#order_div')
-	var order = []
-	var	name = []
 	var id = id
+	var div = document.createElement('DIV')
 	$.ajax({
 		type: 'GET',
 		url: '/user/'+id+'/list',
 		dataType: 'json'
 	}).done(function(data){
 		$.each(data, function(key, value){
-			if (key=='reading_name'){
-				console.log(value)
-				for (i in value){
-					name.push(value[i])
+			if (key!='code' && key!= 'message'){
+				var	ul = document.createElement('UL')
+				ul.innerHTML = key
+				for (index in value){
+					li = document.createElement('LI')
+					li.innerHTML = value[index]
+					li.setAttribute('id', index)
+					li.setAttribute('class', 'reading_list')
+					ul.appendChild(li)
+
 				}
+				div.appendChild(ul)
 			}
+			
 		})
-		$.each(data, function(key, value){
-			if (key=='reading_order') {
-				for (i in value){
-					var ul = document.createElement('UL')
-					ul.innerHTML = value[i]
-					order_div.append(ul)
-				}	
-			}
-		})
+		order_div.append(div)
 					
 	})
 }
@@ -61,11 +60,9 @@ function addul1(){
 function clearShowing(){
 	var phrase = $("p#phrase")
 		grammar = $("p#grammar")
-		comment = $("p#comment")
 		translation = $("p#translation")
 	phrase.empty()
 	grammar.empty()
-	comment.empty()
 	translation.empty()
 }
 
@@ -84,12 +81,14 @@ function clearWordForm(){
 }
 
 function clearForm(){
-	$("textarea:text").val("")
+	form = $('textarea.form-control')
+	form.val("")
+	// $("textarea:text").val("")
 }
 
 
 
-$(".reading_list").click(function(e){
+$("div").delegate(".reading_list", "click", function(e){
 	var id = $(e.target).attr('id')
 	var $reading = $("#reading")
 	$.ajax({
@@ -99,8 +98,8 @@ $(".reading_list").click(function(e){
 	}).done(function(data){
 		$reading.empty()
 		var span = ""
-		$.each(data,function(index,value){
-			if(index=="reading_sentences"){
+		$.each(data,function(key, value){
+			if(key=="reading_sentences"){
 				for	(x in value){
 					span = span + '<span class="reading_content" sen_id="' + x +'" >' + value[x] + ". " + "</span>";
 				}					
@@ -164,19 +163,27 @@ $("div").delegate("span.reading_content","click",function(e){
 		clearShowing()
 		clearForm()
 		$.each(data,function(key,value){
-			if(key=="phrase" && value != "" && value != null){
-				phrase.text("短语："+value)
+			if (key=='code' && value==404){
+				phrase.text("短语： 未填写")
+				grammar.text("语法： 未填写")
+				comment.text("评论： 未填写")
+				translation.text("翻译： 未填写")
+			}else{
+				if(key=="phrase" && value != "" && value != null){
+					phrase.text("短语："+value)
+				}
+				
+				if(key=="grammar" && value != "" && value != null){
+					grammar.text("语法："+value)
+				}
+				if(key=="comment" && value != "" && value != null){
+					comment.text("评论："+value)
+				}
+				if(key=="translation" && value != "" && value != null){
+					translation.text("翻译："+value)
+				}
 			}
 			
-			if(key=="grammar" && value != "" && value != null){
-				grammar.text("语法："+value)
-			}
-			if(key=="comment" && value != "" && value != null){
-				comment.text("评论："+value)
-			}
-			if(key=="translation" && value != "" && value != null){
-				translation.text("翻译："+value)
-			}
 		})
 	})
 
@@ -266,12 +273,4 @@ $("#submit").click(function(){
 		})
 		clearForm()
 	})
-})
-
-$("#li-regi").click(function(){
-    location.pathname = "/regi"
-})
-
-$("#li-login").click(function(){
-	location.pathname = "/login"
 })

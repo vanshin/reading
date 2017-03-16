@@ -27,8 +27,11 @@ function addul2(id){
 		$.each(data, function(key, value){
 			if (key!='code' && key!= 'message'){
 				var	ul = document.createElement('UL')
-				ul.setAttribute("class", "list-group bg-primary")
-				ul.innerHTML = key
+				ul.setAttribute("class", "list-group")
+				li_u = document.createElement('LI')
+				li_u.innerHTML = key
+				ul.appendChild(li_u)
+				// ul.innerHTML = key
 				for (index in value){
 					li = document.createElement('LI')
 					li.innerHTML = value[index]

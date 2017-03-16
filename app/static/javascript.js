@@ -28,8 +28,8 @@ function addul2(id){
 			if (key!='code' && key!= 'message'){
 				var	ul = document.createElement('UL')
 				ul.setAttribute("class", "list-group")
-				li_u = document.createElement('LI')
-				li.setAttribute('class', 'list-group-item')
+				var li_u = document.createElement('LI')
+				li_u.setAttribute('class', 'list-group-item')
 				li_u.innerHTML = key
 				ul.appendChild(li_u)
 				// ul.innerHTML = key

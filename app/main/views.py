@@ -1,7 +1,7 @@
 #coding=utf-8
 import json
 from flask import render_template, jsonify, request
-from flask_login import current_user
+from flask_login import current_user, login_required
 from ..output import output
 from . import main
 from .forms import readingForm
@@ -20,6 +20,7 @@ def input():
     return render_template('input.html')
 
 @main.route('/current_user/id', methods=['GET'])
+@login_required
 def get_user_id():
     """ 获取当前用户的ID """
     if current_user.is_anonymous:
@@ -28,8 +29,11 @@ def get_user_id():
     return output(data=info, to_json=False)
 
 @main.route('/user/<int:id>/list', methods=['GET'])
+@login_required
 def get_reading_list(id):
     """ 请求文章列表 """
+    if current_user.id != id:
+        output()
     readings = User.query.get_or_404(id).readings
     if readings:
         output(to_json=False)

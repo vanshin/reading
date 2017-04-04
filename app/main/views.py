@@ -14,13 +14,14 @@ def index():
     """ 首页 """
     return render_template('index.html')
 
+
 @main.route('/input', methods=['GET'])
 def input():
     """ 请求页面 """
     return render_template('input.html')
 
-@main.route('/current_user/id', methods=['GET'])
 @login_required
+@main.route('/current_user/id', methods=['GET'])
 def get_user_id():
     """ 获取当前用户的ID """
     if current_user.is_anonymous:
@@ -28,8 +29,8 @@ def get_user_id():
     info = dict(id=current_user.id, current_userid=current_user.userid)
     return output(data=info, to_json=False)
 
-@main.route('/user/<int:id>/list', methods=['GET'])
 @login_required
+@main.route('/user/<int:id>/list', methods=['GET'])
 def get_reading_list(id):
     """ 请求文章列表 """
     if current_user.id != id:

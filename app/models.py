@@ -40,6 +40,7 @@ class Sentence(db.Model):
                                      cascade='delete')
     sentence_body = db.Column(db.Text)
     comment = db.Column(db.Text)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def __repf__(self):
         return '<Sentence %d>' % self.id
@@ -97,6 +98,7 @@ class Word(db.Model):
                                 uselist='False',
                                 cascade="delete",)
     word_body = db.Column(db.String(32))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def to_json(self):
         """ 返回单词 """
@@ -133,6 +135,8 @@ class User(db.Model, UserMixin):
     avatar_hash = db.Column(db.String(64))
     location = db.Column(db.String(64))
     readings = db.relationship('Reading', backref='user', lazy='dynamic')
+    sentences = db.relationship('Sentence', backref='user', lazy='dynamic')
+    words = db.relationship('Word', backref='user', lazy='dynamic')
 
     def to_json(self):
         json_user = {

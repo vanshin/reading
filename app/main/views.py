@@ -1,8 +1,12 @@
 #coding=utf-8
 import json
+import logging
+logging.basicConfig(level=logging.INFO)
+
 from flask import render_template, jsonify, request
 from flask_login import current_user, login_required
 from ..output import output
+from ..decorator import check_user
 from . import main
 from .forms import readingForm
 from ..models import Reading, Sentence, Sentence_Note, Word, Word_Note, User
@@ -20,17 +24,19 @@ def input():
     """ 请求页面 """
     return render_template('input.html')
 
-@login_required
+
 @main.route('/current_user/id', methods=['GET'])
+@login_required
 def get_user_id():
     """ 获取当前用户的ID """
+    logging.info("current_user is %s" % current_user)
     if current_user.is_anonymous:
         output()
     info = dict(id=current_user.id, current_userid=current_user.userid)
     return output(data=info, to_json=False)
 
-@login_required
 @main.route('/user/<int:id>/list', methods=['GET'])
+@login_required
 def get_reading_list(id):
     """ 请求文章列表 """
     if current_user.id != id:
@@ -74,23 +80,29 @@ def put_reading():
     db.session.commit()
     reading_id = reading.id
     for sentence_body in sentences_list:
-        sentence = Sentence(reading_id=reading_id, sentence_body=sentence_body)
+        sentence = Sentence(reading_id=reading_id,
+                            sentence_body=sentence_body,
+                            user_id=user_id)
         db.session.add(sentence)
         db.session.commit()
         word_list = sentence_body.split(' ')
         for word_body in word_list:
-            word = Word(sentence_id=sentence.id, word_body=word_body)
+            word = Word(sentence_id=sentence.id,
+                        word_body=word_body,
+                        user_id=user_id)
             db.session.add(word)
             db.session.commit()
     return output(reading)
 
 @main.route('/reading/<int:id>', methods=['GET'])
+@check_user('reading')
 def get_reading(id):
     """ 请求文章 """
     reading = Reading.query.get_or_404(id)
     return output(reading)
 
 @main.route('/reading/<int:id>/word_notes', methods=['GET'])
+@check_user('reading')
 def get_word_notes(id):
     """ 请求文章下所有的单词笔记 """
     reading = Reading.query.get_or_404(id)
@@ -104,7 +116,9 @@ def get_word_notes(id):
             word_notes[word.word.body] = note
     return output(word_notes)
 
+
 @main.route('/reading/<int:id>/sentence_notes', methods=['GET'])
+@check_user('reading')
 def get_sentence_notes(id):
     """ 请求文章下所有的句子笔记 """
     reading = Reading.query.get_or_404(id)
@@ -119,12 +133,14 @@ def get_sentence_notes(id):
     return output(sentence_notes)
 
 @main.route('/sentence/<int:id>', methods=['GET'])
+@check_user('sentence')
 def sentence(id):
     """ 请求句子 """
     sentence = Sentence.query.get_or_404(id)
     return output(sentence)
 
 @main.route('/sentence/<int:id>/note', methods=['GET'])
+@check_user('sentence')
 def get_sentence_note(id):
     """ 请求句子的笔记 """
     sentence = Sentence.query.get_or_404(id)
@@ -134,12 +150,14 @@ def get_sentence_note(id):
     return output()
 
 @main.route('/word/<int:id>', methods=['GET'])
+@check_user('word')
 def word(id):
     """ 请求单词 """
     word = Word.query.get_or_404(id)
     return output(word)
 
 @main.route('/word/<int:id>/note', methods=['GET'])
+@check_user('word')
 def get_word_note(id):
     """ 请求单词的笔记 """
     word = Word.query.get_or_404(id)

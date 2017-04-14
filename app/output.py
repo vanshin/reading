@@ -61,40 +61,5 @@ def output(data=None, to_json=True):
     method_name = request.method + '_' + data_string + '_' + to_json_string
     return methods[method_name](data)
 
-# 版本1，弃用
-def output2(data=None, to_json=True):
-    """ 输出 """
-    method = request.method
-    if to_json:
-        if method == 'GET' and data is not None:
-            data = data.to_json()
-            data['code'] = 200
-            data['message'] = 'SUCCESS'
-            return jsonify(data)
-        elif method == 'GET' and data is None:
-            data = dict(code=404, message='NOT FOUND')
-            return jsonify(data)
-        elif method == 'PUT' and data is not None:
-            data = data.to_json()
-            data['code'] = 200
-            return jsonify(data)
-        elif method == 'PUT' and data is None:
-            data = dict(code=404)
-    else:
-        if method == 'GET' and data is not None:
-            data = data.to_json()
-            data['code'] = 200
-            data['message'] = 'SUCCESS'
-            return jsonify(data)
-        elif method == 'GET' and data is None:
-            data = dict(code=404, message='NOT FOUND')
-            return jsonify(data)
-        elif method == 'PUT' and data is not None:
-            data = data.to_json()
-            data['code'] = 200
-            return jsonify(data)
-        elif method == 'PUT' and data is None:
-            data = dict(code=404)
-
 
     

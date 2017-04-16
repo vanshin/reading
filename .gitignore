@@ -1,0 +1,12 @@
+# windows
+
+*.py[cod]
+*.so
+*.egg
+*.egg-info
+dist
+build
+config.py
+nohup.out
+
+/migrations

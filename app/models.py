@@ -38,6 +38,8 @@ class Reading(db.Model):
         }
         return json_reading
 
+
+
 class Sentence(db.Model):
     __tablename__ = 'sentences'
     id = db.Column(db.Integer, primary_key=True)

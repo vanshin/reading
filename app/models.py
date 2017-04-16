@@ -5,27 +5,36 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
+class User_Reading_Map(db.Model):
+    __tablename__ = 'user_reading_maps'
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key='True')
+    reading_id = db.Column(db.Integer, db.ForeignKey('readings.id'), primary_key='True')
+    ctime = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship('User', back_populates='readings')
+    reading = db.relationship('Reading', back_populates='users')
 
 class Reading(db.Model):
-    __tablename__ = 'readings'
+    __tablename__ = 'readings'  
     id = db.Column(db.Integer, primary_key=True)
+    r_id = db.Column(db.Integer, unique=True)
     reading_order = db.Column(db.Text)
     reading_name = db.Column(db.String(64))
     reading_body = db.Column(db.Text)
-    editors = db.Column(db.String(64))
     sentences = db.relationship('Sentence', backref='reading', lazy='dynamic', cascade="delete")
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    owner = db.Column(db.Integer)
+    users = db.relationship('User_Reading_Map', back_populates="reading")
 
     def __repf__(self):
         return '<Reading %r>' % self.reading_name
 
     def to_json(self):
         json_reading = {
-            'id': self.id,
+            'id': self.r_id,
             'reading_order': self.reading_order,
             'reading_name': self.reading_name,
             'reading_body': self.reading_body,
-            'reading_sentences': {x.id: x.sentence_body for x in self.sentences}
+            'reading_sentences': {x.s_id: x.sentence_body for x in self.sentences}
         }
         return json_reading
 
@@ -33,6 +42,8 @@ class Sentence(db.Model):
     __tablename__ = 'sentences'
     id = db.Column(db.Integer, primary_key=True)
     reading_id = db.Column(db.Integer, db.ForeignKey('readings.id'))
+    s_id = db.Column(db.Integer, unique=True)
+    parag_number = db.Column(db.Integer)
     words = db.relationship('Word', backref='sentence', lazy='dynamic', cascade='all, delete')
     sentence_notes = db.relationship('Sentence_Note',
                                      backref='sentence',
@@ -51,9 +62,10 @@ class Sentence(db.Model):
         for word in self.words:
             words.append(word.word_body)
         json_sentence = {
-            'id': self.id,
+            'id': self.s_id,
+            'parag_number': self.parag_number,
             'sentence_body': self.sentence_body,
-            'words': {x.id :x.word_body for x in self.words}
+            'words': {x.w_id :x.word_body for x in self.words}
         }
         return json_sentence
 
@@ -73,14 +85,16 @@ class Sentence_Note(db.Model):
     """ sentence_note model """
     __tablename__ = 'sentence_notes'
     id = db.Column(db.Integer, primary_key=True)
+    sn_id = db.Column(db.Integer, unique=True)
     sentence_id = db.Column(db.Integer, db.ForeignKey('sentences.id'))
     phrase = db.Column(db.Text)
     grammar = db.Column(db.Text)
     translation = db.Column(db.Text)
 
     def to_json(self):
-        """ 生成json数据 """
+        """ 生成JSON数据 """
         json_sentence_note = {
+            'sn_id': self.sn_id,
             'phrase': self.phrase,
             'grammar': self.grammar,
             'translation': self.translation
@@ -91,19 +105,21 @@ class Word(db.Model):
     """ word model """
     __tablename__ = 'words'
     id = db.Column(db.Integer, primary_key=True)
+    w_id = db.Column(db.Integer, unique=True)
     sentence_id = db.Column(db.Integer, db.ForeignKey('sentences.id'))
     word_note = db.relationship('Word_Note',
                                 backref='word',
                                 lazy='dynamic',
                                 uselist='False',
-                                cascade="delete",)
+                                cascade="delete",
+                               )
     word_body = db.Column(db.String(32))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def to_json(self):
         """ 返回单词 """
         json_word = {
-            "id": self.id,
+            "id": self.w_id,
             "word_body": self.word_body
         }
         return json_word
@@ -112,6 +128,7 @@ class Word_Note(db.Model):
     """ word_note model """
     __tablename__ = 'word_notes'
     id = db.Column(db.Integer, primary_key=True)
+    wn_id = db.Column(db.Integer, unique=True)
     word_id = db.Column(db.Integer, db.ForeignKey('words.id'))
     Chinese = db.Column(db.String(64))
     Phonogram = db.Column(db.String(32))
@@ -124,24 +141,25 @@ class Word_Note(db.Model):
         }
         return json_word_note
 
+
 class User(db.Model, UserMixin):
     """ user model """
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    userid = db.Column(db.Integer)
+    u_id = db.Column(db.Integer, unique=True)
     username = db.Column(db.String(64), index=True)
     password_hash = db.Column(db.String(128))
     regi_time = db.Column(db.DateTime(), default=datetime.utcnow)
     avatar_hash = db.Column(db.String(64))
     location = db.Column(db.String(64))
-    readings = db.relationship('Reading', backref='user', lazy='dynamic')
+    introduction = db.Column(db.Text)
     sentences = db.relationship('Sentence', backref='user', lazy='dynamic')
     words = db.relationship('Word', backref='user', lazy='dynamic')
+    readings = db.relationship('User_Reading_Map', back_populates="user")
 
     def to_json(self):
         json_user = {
-            "id": self.id,
-            "userid": self.userid,
+            "id": self.u_id,
             "username": self.username,
             "regi_time": self.regi_time,
             "location": self.location
@@ -159,16 +177,7 @@ class User(db.Model, UserMixin):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
-
-
-# class Word(db.Model):
-#     __tablename__ = 'words'
-#     id = db.Column(db.Integer,primary_key=True)
-#     sentence_id = db.Column(db.Integer,db.ForeignKey('sentences.id')
-#     word_body = db.Column(db.String(64))
-#     def __repf__(self):
-#         return '<Word %d>' self.id

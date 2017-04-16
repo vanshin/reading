@@ -1,4 +1,4 @@
-#endcoding=utf-8
+#encoding=utf-8
 
 import logging
 import functools
@@ -19,8 +19,6 @@ def check_user(level):
         @functools.wraps(func)
         def __(*args, **kwargs):
             func_id = kwargs.get('id', 0)
-            logging.info("request_id is %d" % func_id)
-            logging.info("current_user is %s" % current_user.id)
             if level == "word":
                 word = Word.query.filter_by(id=func_id).first()
                 user_id = word.user_id
@@ -46,7 +44,21 @@ def check_user(level):
     return _
 
 
-
+def check_edit(type):
+    def _(func):
+        @functools.wraps(func)
+        def __(*args, **kwargs):
+            reading_json = request.get_json(force=True, silent=True)
+            logging.debug('reading_json type=%s' % type(reading_json))
+            r_id = reading_json.get('reading_id')
+            edit_user_id = kwargs.get('id', 0)
+            user_list = Reading.query.filter_by(id=r_id).all()
+            if edit_user_id in user_list:
+                return func(*args, **kwargs)
+            else:
+                return output()
+        return __
+    return _
 
 def check_same_user():
     pass

@@ -9,6 +9,7 @@ from . import auth
 from .forms import LoginForm, RegiForm
 from ..models import User
 from .. import db
+from ..reading import get_random
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -33,10 +34,9 @@ def regi():
     form = RegiForm()
     if form.validate_on_submit():
         # 先假设不会重复
-        userid = random.randint(000000, 999999)
         user = User(username=form.username.data,
                     password=form.password.data,
-                    userid=userid)
+                    u_id=get_random())
         db.session.add(user)
         db.session.commit()
         flash("注册成功")

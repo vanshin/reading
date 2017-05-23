@@ -15,7 +15,12 @@ $(document).ready(function(){
 	})
 })
 
-function addul2(id){
+$('.ui.accordion')
+  .accordion()
+;
+
+
+function addul3(id){
 	var order_div = $('#order_div')
 	var id = id
 	var div = document.createElement('DIV')
@@ -39,7 +44,6 @@ function addul2(id){
 					li.setAttribute('id', index)
 					li.setAttribute('class', 'reading_list list-group-item')
 					ul.appendChild(li)
-
 				}
 				div.appendChild(ul)
 			}
@@ -50,47 +54,30 @@ function addul2(id){
 	})
 }
 
-function addul1(){
-	if ((tmp = $("inputul").val()) == " ") {
-		alert($("inputul").val())
-	}else{
-		var text = $("#inputul").val()
-		var a = "<li><a href="+  +">"+ text +"</a></li>"
-		var txt = "<li>" + text + "</li>"
-		$("#addul").after(txt)
-		$("#inputul").val(" ")
-	}
-}
 
-function clearShowing(){
-	var phrase = $("p#phrase")
-		grammar = $("p#grammar")
-		translation = $("p#translation")
-	phrase.empty()
-	grammar.empty()
-	translation.empty()
-}
 
-function clearWordShowing(){
-	var Chinese = $("p#Chinese")
-		Phonogram = $("p#Phonogram")
-	Chinese.empty()
-	Phonogram.empty()
+function addul2(id){
+	var order_div = $('#order_div')
+	var id = id
+	var div = document.createElement('DIV')
+	$.ajax({
+		type: 'GET',
+		url: '/user/'+id+'/list',
+		dataType: 'json'
+	}).done(function(data){
+		$.each(data, function(key, value){
+			if (key!='code' && key!= 'message'){
+				var title = key
+				var content = []
+				for (key in value){
+					content.push(value[key])
+				}
+				div_item = get_item(title, value)
+				order_div.append(div_item)
+			}
+		})				
+	})
 }
-
-function clearWordForm(){
-	var Chinese = $("input#Chinese")
-		Phonogram = $("input#Phonogram")
-	Chinese.val("")
-	Phonogram.val("")
-}
-
-function clearForm(){
-	form = $('textarea.form-control')
-	form.val("")
-	// $("textarea:text").val("")
-}
-
 
 
 $("div").delegate(".reading_list", "click", function(e){

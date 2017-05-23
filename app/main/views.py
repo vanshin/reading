@@ -79,18 +79,22 @@ def put_reading():
     reading_body = json_reading.get("reading_body")
     user_id = current_user.id
     # 处理文章
+    reading_offset = 1
     reading = ReadingProcess(reading_body)
     reading_ = Reading(reading_order=reading_order,
                        reading_name=reading_name,
                        reading_body=reading_body,
                        r_id=get_random(),    # 此处需要验证reading是不是唯一的
                        owner=user_id,
+                       offset=reading_offset
                       )
+    reading_offset += 1
     db.session.add(reading_)
     db.session.commit()
 
     reading_id = reading_.id
     # 处理句子，句子需要添加段落id
+    sentence_offset = 1
     for index in range(1, reading.parag_count()+1):
         logging.info('reading parag_number=%s' % index)
         logging.info('reading parag=%s' % ','.join(reading.parags().get(index, [])))
@@ -100,18 +104,23 @@ def put_reading():
                                 s_id=get_random(),
                                 parag_number=index,
                                 sentence_body=sentence_body,
-                                user_id=user_id
+                                user_id=user_id,
+                                offset = sentence_offset
                                )
+            reading_offset += 1
             db.session.add(sentence)
             db.session.commit()
             # 处理单词
+            word_offset = 1
             word_list = sentence_body.split(' ')
             for word_body in word_list:
                 word = Word(sentence_id=sentence.id,
                             w_id=get_random(),
                             word_body=word_body,
-                            user_id=user_id
+                            user_id=user_id,
+                            offset = word_offset
                            )
+                word_offset += 1
                 db.session.add(word)
                 db.session.commit()
 
@@ -225,7 +234,11 @@ def edit_word_notes(id):
     # db.session.commit()
     return output(word_note)
 
-
+@main.route('/reading/<int:id>/parag', methods=['GET'])
+def get_parag(id):
+    r = Reading.query.filter_by(r_id=id).first()
+    data = r.reading_body1()
+    return jsonify(data)
 
 @main.route('/sentence/<int:id>/note', methods=['DELETE'])
 def delete_sentence_notes(id):

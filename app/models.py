@@ -1,4 +1,8 @@
 #coding=utf-8
+
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 from . import db, login_manager
 from datetime import datetime
 from flask_login import UserMixin
@@ -24,17 +28,41 @@ class Reading(db.Model):
     sentences = db.relationship('Sentence', backref='reading', lazy='dynamic', cascade="delete")
     owner = db.Column(db.Integer)
     users = db.relationship('User_Reading_Map', back_populates="reading")
+    offset = db.Column(db.Integer)
 
     def __repf__(self):
         return '<Reading %r>' % self.reading_name
+
+    def get_body(self):
+        parag_number_set = set()
+        parag_body = {}
+        for sentence in self.sentences:
+            parag_number_set.add(sentence.parag_number)
+        logging.debug(parag_number_set)
+        for parag_numner in parag_number_set:
+            dict_s_id = {x.s_id: x.sentence_body for x in self.sentences if x.parag_number == parag_numner}
+            parag_body[parag_numner] = dict_s_id
+        return parag_body
+
+    def get_offset(self):
+        parag_number_set = set()
+        parag_body = {}
+        for sentence in self.sentences:
+            parag_number_set.add(sentence.parag_number)
+        logging.debug(parag_number_set)
+        for parag_numner in parag_number_set:
+            dict_offset = {x.s_id: x.offset for x in self.sentences if x.parag_number == parag_numner}
+            parag_body[parag_numner] = dict_offset
+        return parag_body
+
 
     def to_json(self):
         json_reading = {
             'id': self.r_id,
             'reading_order': self.reading_order,
             'reading_name': self.reading_name,
-            'reading_body': self.reading_body,
-            'reading_sentences': {x.s_id: x.sentence_body for x in self.sentences}
+            'reading_body': self.get_body(),
+            'reading_offset': self.get_offset()
         }
         return json_reading
 
@@ -54,6 +82,7 @@ class Sentence(db.Model):
     sentence_body = db.Column(db.Text)
     comment = db.Column(db.Text)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    offset = db.Column(db.Integer)
 
     def __repf__(self):
         return '<Sentence %d>' % self.id
@@ -116,6 +145,7 @@ class Word(db.Model):
                                 cascade="delete",
                                )
     word_body = db.Column(db.String(32))
+    offset = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def to_json(self):

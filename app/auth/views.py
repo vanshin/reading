@@ -34,13 +34,23 @@ def regi():
     form = RegiForm()
     if form.validate_on_submit():
         # 先假设不会重复
-        user = User(username=form.username.data,
-                    password=form.password.data,
-                    u_id=get_random())
-        db.session.add(user)
-        db.session.commit()
-        flash("注册成功")
-        return redirect(url_for('auth.login'))
+        username = form.username.data
+        if not username:
+            flash("用户名未填写")
+            return render_template('auth/regi.html', form=form)
+            
+        password = form.password.data
+        password2 = form.password2.data
+        if password == password2:
+            user = User(username=username,
+                        password=password,
+                        u_id=get_random())
+            db.session.add(user)
+            db.session.commit()
+            flash("注册成功")
+            return redirect(url_for('auth.login'))
+        else:
+            flash("密码相同")
     return render_template('auth/regi.html', form=form)
 
 

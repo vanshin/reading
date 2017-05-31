@@ -31,6 +31,12 @@ class ReadingProcess(object):
 
 
     def __parags(self):
+        """
+            处理段落
+            1 段落号：句子列表 - 1:[]
+            2 段落句子长度：- parag_1:4
+            3 文章总段落数：- count:4
+        """
         __parag_num = 1
         for parag in self.__parag_list:
             tmp_list = re.findall(r'[a-zA-Z0-9\-\,\s\\\"]+\.', parag)

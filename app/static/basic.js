@@ -85,3 +85,18 @@ function get_list(content_json) {
 	}
 	return div_list
 }
+
+function get_span(sen_id, text) {
+	var span = document.createElement('SPAN')
+	span.setAttribute('class', 'reading_content')
+	span.setAttribute('sen_id', sen_id)
+	span.innerText = text
+
+	return span
+}
+
+
+
+function get_modal() {
+
+}

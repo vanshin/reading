@@ -17,9 +17,7 @@ from .. import db
 
 @share.route('/user/<int:id>/edit_list', methods=['POST'])
 def post_edit_list(id):
-    """
-    分享文章给其他用户
-    """
+    """ 分享文章给其他用户 """
     # 根据reading id和user id存入数据库
     reading_json = request.get_json(force=True, silent=True)
     r_id = reading_json.get('reading_id', 0)

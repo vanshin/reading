@@ -2,6 +2,7 @@
 
 import logging
 logging.basicConfig(level=logging.DEBUG)
+from collections import OrderedDict
 
 from . import db, login_manager
 from datetime import datetime
@@ -35,34 +36,24 @@ class Reading(db.Model):
 
     def get_body(self):
         parag_number_set = set()
-        parag_body = {}
+        parag_body = OrderedDict()
+        # 获取段落数量并排序
         for sentence in self.sentences:
             parag_number_set.add(sentence.parag_number)
-        logging.debug(parag_number_set)
-        for parag_numner in parag_number_set:
-            dict_s_id = {x.s_id: x.sentence_body for x in self.sentences if x.parag_number == parag_numner}
-            parag_body[parag_numner] = dict_s_id
-        return parag_body
-
-    def get_offset(self):
-        parag_number_set = set()
-        parag_body = {}
-        for sentence in self.sentences:
-            parag_number_set.add(sentence.parag_number)
-        logging.debug(parag_number_set)
-        for parag_numner in parag_number_set:
-            dict_offset = {x.s_id: x.offset for x in self.sentences if x.parag_number == parag_numner}
-            parag_body[parag_numner] = dict_offset
+        parag_number_list = list(parag_number_set)
+        parag_number_list.sort()
+        for parag_numner in parag_number_list:
+            body_dict = { y.s_id: y.sentence_body for y in sorted(self.sentences, key=lambda a: a.offset) if y.parag_number == parag_numner }
+            parag_body[parag_numner] = body_dict
         return parag_body
 
 
     def to_json(self):
         json_reading = {
-            'id': self.r_id,
+            'reading_id': self.r_id,
             'reading_order': self.reading_order,
             'reading_name': self.reading_name,
             'reading_body': self.get_body(),
-            'reading_offset': self.get_offset()
         }
         return json_reading
 
@@ -89,14 +80,16 @@ class Sentence(db.Model):
 
     def to_json(self):
         """ return json data """
-        words = list()
-        for word in self.words:
-            words.append(word.word_body)
+        words = OrderedDict()
+        words_list = sorted(self.words, key=lambda x: x.offset)
+        for word in words_list:
+            words[str(word.w_id)] = word.word_body
+        print words
         json_sentence = {
-            'id': self.s_id,
+            'sen_id': self.s_id,
             'parag_number': self.parag_number,
             'sentence_body': self.sentence_body,
-            'words': {x.w_id :x.word_body for x in self.words}
+            'words': words,
         }
         return json_sentence
 

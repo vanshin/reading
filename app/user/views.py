@@ -1,17 +1,21 @@
 #coding=utf-8
 
 import random
+import logging
+logging.basicConfig(level=logging.INFO)
 
 from flask import render_template, redirect, request, url_for, flash, jsonify
-from flask_login import login_user, login_required, logout_user, login_required
+from flask_login import login_user, login_required, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import auth
-from .forms import LoginForm, RegiForm
+
+from .. output import output
+from . import user
 from ..models import User
 from .. import db
 from ..reading import get_random
+from forms import LoginForm
 
-@auth.route('/login', methods=['GET', 'POST'])
+@user.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -22,14 +26,14 @@ def login():
         flash('错误的用户名或者密码')
     return render_template('auth/login.html', form=form)
 
-@auth.route('/logout')
+@user.route('/logout')
 @login_required
 def logout():
     logout_user()
     flash('已经注销登录')
     return redirect(url_for('main.index'))
 
-@auth.route('/regi', methods=['GET', 'POST'])
+@user.route('/regi', methods=['GET', 'POST'])
 def regi():
     form = RegiForm()
     if form.validate_on_submit():
@@ -48,7 +52,7 @@ def regi():
             db.session.add(user)
             db.session.commit()
             flash("注册成功")
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('user.login'))
         else:
             flash("密码相同")
     return render_template('auth/regi.html', form=form)
@@ -56,6 +60,15 @@ def regi():
 
 
 
+@user.route('/current_user/id', methods=['GET'])
+@login_required
+def get_user_id():
+    """ 获取当前用户的ID """
+    logging.info("current_user is %s" % current_user)
+    if current_user.is_anonymous:
+        output()
+    info = dict(id=current_user.u_id)
+    return output(data=info, to_json=False)
 
 
 
@@ -75,18 +88,18 @@ def regi():
 
 
 
-# @auth.route('/session/new', methods=['GET'])
+# @user.route('/session/new', methods=['GET'])
 # def regi_form():
 #     """ 获取注册页面 """
 #     return render_template('auth/regi.html')
 
 
-# @auth.route('/users/new' ,methods=['GET'])
+# @user.route('/users/new' ,methods=['GET'])
 # def login_form():
 #     """ 获取用户登录页面 """
 #     return render_template('/auth/login.html')
 
-# @auth.route('/user', methods=['POST'])
+# @user.route('/user', methods=['POST'])
 # def regi():
 #     """ 用户注册 """
 #     userid = random.randint(000000, 999999)
@@ -103,7 +116,7 @@ def regi():
 #         flash("password is not same")
 #         return render_template('auth/regi.html')
 
-# @auth.route('/session', methods=['POST'])
+# @user.route('/session', methods=['POST'])
 # def login():
 #     """ login view """
 #     userinfo = request.get_json(silent='True')
@@ -122,7 +135,7 @@ def regi():
 
 #         }
 
-# @auth.route('/session', methods=['DELETE'])
+# @user.route('/session', methods=['DELETE'])
 # def logout():
 #     """" logout view """
 #     userinfo = request.get_json(silent='True')
@@ -133,7 +146,7 @@ def regi():
 #             "code": 204
 #         }
 
-# @auth.route('/users/<int:id>', methods=['GET'])
+# @user.route('/users/<int:id>', methods=['GET'])
 # def get_user(id):
 #     """ get user view """
 #     user = User.query.filter_by(id=id).first()

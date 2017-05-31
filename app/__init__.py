@@ -29,9 +29,16 @@ def create_app(config_name):
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
-    from .auth import auth as auth_blueprint
-    app.register_blueprint(auth_blueprint)
+    from .user import user as user_blueprint
+    app.register_blueprint(user_blueprint)
 
     from .share import share as share_blueprint
     app.register_blueprint(share_blueprint)
+
+    from .edit import edit as edit_blueprint
+    app.register_blueprint(edit_blueprint)
+
+    from .show import show as show_blueprint
+    app.register_blueprint(show_blueprint)
+
     return app

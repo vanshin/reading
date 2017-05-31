@@ -15,43 +15,14 @@ $(document).ready(function(){
 	})
 })
 
-$('.ui.accordion')
-  .accordion()
-;
-
-
-function addul3(id){
-	var order_div = $('#order_div')
-	var id = id
-	var div = document.createElement('DIV')
-	$.ajax({
-		type: 'GET',
-		url: '/user/'+id+'/list',
-		dataType: 'json'
-	}).done(function(data){
-		$.each(data, function(key, value){
-			if (key!='code' && key!= 'message'){
-				var	ul = document.createElement('UL')
-				ul.setAttribute("class", "list-group")
-				var li_u = document.createElement('LI')
-				li_u.setAttribute('class', 'list-group-item')
-				li_u.innerHTML = key
-				ul.appendChild(li_u)
-				// ul.innerHTML = key
-				for (index in value){
-					li = document.createElement('LI')
-					li.innerHTML = value[index]
-					li.setAttribute('id', index)
-					li.setAttribute('class', 'reading_list list-group-item')
-					ul.appendChild(li)
-				}
-				div.appendChild(ul)
-			}
-			
-		})
-		order_div.append(div)
-					
-	})
+$('.ui.accordion').accordion();
+// $('.ui.modal').modal();
+function tanchu(){
+	
+	$('.ui.modal')
+		.modal({blurring: true})
+		.modal('show')
+		
 }
 
 
@@ -89,16 +60,19 @@ $("div").delegate(".reading_list", "click", function(e){
 		dataType:'json'
 	}).done(function(data){
 		$reading.empty()
-		var span = ""
-		$.each(data,function(key, value){
-			if(key=="reading_sentences"){
-				for	(x in value){
-					span = span + '<span class="reading_content" sen_id="' + x +'" >' + value[x] + ". " + "</span>";
-				}					
+		if(data['code'] == 200){
+			body = data.reading_body
+			for (key in body){
+				var p = document.createElement('P')
+				parag = body[key]
+				for (x in parag){
+					span = get_span(x, parag[x])
+					p.append(span)
+				}
+				
+				$reading.prepend(p)
 			}
-		})
-		$reading.prepend(span)
-
+		}
 	}).fail(function(jqXHR,textStatus){
 		console.log("错误:"+textStatus)
 	})
@@ -186,13 +160,11 @@ $("div").delegate("span.reading_content","click",function(e){
 	}).done(function(data){
 		sentence.empty()
 		var span = ""
-		$.each(data, function(key, value){
-			if (key=="words"){
-				for (x in value){
-					span = span + '<span class="word_content" word_id="' + x +'" >' + value[x] + " " + "</span>";
-				}
-			}
-		})
+		words = data.words
+		console.log(words)
+		for (x in words) {
+			span = span + '<span class="word_content" word_id="' + x +'" >' + words[x] + " " + "</span>";
+		}
 		sentence.prepend(span)
 	})
 })

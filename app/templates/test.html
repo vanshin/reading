@@ -1,83 +1,33 @@
-<!DOCTYPE html>
-<html lang=zh-cn>
-    <head>
-        <title>eng post</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <script src="../static/javascript.js"></script>
-        <script src="../static/jquery-3.1.1.js"></script>
-        <link rel="stylesheet" type="text/css" href="../static/style.css">
-        <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.css">
-        <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
-    </head>
-    <body>
-        <div class="content">
-            <div class="navbar navbar-default" role="navigation">
-                <div class="container-fluid">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle collapse" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                            <span class="sr-only"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a class="navbar-brand" href="#"></a>
-                    </div>
-                    <div class="collapse navbar-collapse">
-                        <ul class="nav navbar-nav">
-                            <li class="active"><a href="#">Link</a></li>
-                            <li><a href="{{ url_for() }}">input</a></li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">Action</a></li>
-                                    <li>something</li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <form class="navbar-form navbar-left" role="search">
-                            <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Search">
-                            </div>
-                            <button type="submit" class="btn btn-default">Submit</button>
-                        </form>
-                        <ul class="nav navbar-nav navbar-right">
-                            <li><a href="#">Link</a></li>
-                            <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">Action</a></li>
-                                <li><a href="#">Another action</a></li>
-                                <li><a href="#">Something else here</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#">Separated link</a></li>
-                            </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block title %} 首页 {% endblock %}
+
+
+
+{% block content %}
+<button onclick="tanchu()">ceshi</button>
+    <div class="ui modal">
+        <i class="close icon"></i>
+        <div class="header">
+            模态框标题
+        </div>
+        <div class="image content">
+            <div class="image">
+            图像可以出现在左边或图标上 
             </div>
-            <div class="container">
-                <div class="row">
-                    <div id="sidebar" class="col-md-2">
-                        <ul>
-                            <li>2000</li>
-                            <li>2001</li>
-                            <li>2002</li>
-                        </ul>
-                    </div>
-                    <div id="reading" class="col-md-7">
-                        <p id="post1" class="post1">
-                            In 1939 two brothers, Mac and Dick McDonald, started a drive-in restaurant in San Bernadino, California. They carefully chose a busy corner for their location. They had run their own businesses for years, first a theater, then a barbecue（烤肉）restaurant, and then another drive-in. But in their new operation, they offered a new, shortened menu: French fries, hamburgers, and sodas. To this small selection they added one new concept: quick service, no waiters or waitresses, and no tips.　
-                        </p>
-                    </div>
-                    <div class="col-md-3" id="control">
-                        <p class="test"></p>
-                        <button></button>
-                    </div>
-                </div>
+            <div class="description">
+            描述可以出现在右边
             </div>
         </div>
-        
-        <script src="../static/javascript.js"></script>
-        <script src="../static/jquery-3.1.1.js"></script>
-        <script src="../static/bootstrap/js/bootstrap.js"></script>
-    </body>
-</html>
+        <div class="actions">
+            <div class="ui button">取消</div>
+            <div class="ui button">确定</div>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+{% block js %}
+<script src="../static/run.js"></script>
+{% endblock %}

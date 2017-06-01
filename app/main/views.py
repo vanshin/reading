@@ -33,11 +33,21 @@ def input():
     """ 请求页面 """
     return render_template('input.html')
 
+@main.route('/sentences', methods=['GET'])
+def sentences():
+    """ 背诵句子 """
+    return render_template('sentences.html')
+
+@main.route('/words', methods=['GET'])
+def words():
+    """ 背诵单词 """
+    return render_template('words.html')
 
 @main.route('/test', methods=['GET'])
 def test():
     """ 测试有的没的 """
     return render_template('test.html')
+
 # @main.route('/user/<int:id>/list', methods=['GET'])
 # @login_required
 # def get_reading_list(id):

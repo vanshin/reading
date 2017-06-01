@@ -26,6 +26,22 @@ function clearForm(){
 	form.val("")
 }
 
+function get_userid() {
+	var id
+	$.ajax({
+		type:'GET',
+		url:'/current_user/id',
+		dataType:'json',
+		async: false,
+		cache: false,
+	}).done(function(data){
+        if (data.code == 200){
+            id = data.id
+        }
+	})
+	return id
+}
+
 function create_title(title) {
 	var i = document.createElement('I')
 	i.setAttribute("class", "dropdown icon")
@@ -91,12 +107,40 @@ function get_span(sen_id, text) {
 	span.setAttribute('class', 'reading_content')
 	span.setAttribute('sen_id', sen_id)
 	span.innerText = text
-
 	return span
 }
 
+function get_vertical_segment(type, type_id, content) {
+	var div = document.createElement('DIV')
+	div.setAttribute('class', 'ui vertical segment')
+	div.setAttribute(type, type_id)
+	div.innerText = content
+	return div
+}
 
+function get_button(content) {
+	var button = document.createElement('BUTTON')
+	button.setAttribute('class', 'compact ui button')
+	button.innerText = content
+	return button
+}
 
-function get_modal() {
+function get_p(content, prefix) {
+	var p = document.createElement('P')
+	p.setAttribute('class', '')
+	p.innerText = prefix + content
+	// if (prefix) {
+	// 	p.innerText = content
+	// } else {
+	// 	p.innerText = prefix + content
+	// }
+	
+	return p
+}
 
+function get_ibutton(content) {
+	var ibutton = document.createElement('INPUT')
+	ibutton.setAttribute('type', 'button')
+	ibutton.setAttribute('value', content)
+	return ibutton
 }

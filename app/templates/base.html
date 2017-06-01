@@ -9,7 +9,6 @@
 
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="../static/style.css">
-<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.css">
 <link rel="stylesheet" href="../static/Semantic/semantic.min.css">
 
@@ -28,6 +27,8 @@
              </button>
              <a class="navbar-brand" href="/">HOME</a>
              <a class="navbar-brand" href="{{ url_for('main.input') }}">输入文章</a>
+             <a class="navbar-brand" href="{{ url_for('main.sentences') }}">背句子</a>
+             <a class="navbar-brand" href="{{ url_for('main.words') }}">背单词</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
@@ -78,17 +79,16 @@
     <div class="row">
         {% block sidebar %} {% endblock %}
         {% block reading %} {% endblock %}
-        {% block control %}  {% endblock %}
+        {% block control %} {% endblock %}
     </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
 
-<script src="../static/jquery.min.js"></script>
-<srcipt src="../static/jquery-3.1.1.js"></script>
-<script src="../static/Semantic/semantic.min.js"></script>
+<script src="../static/jquery.min2.js"></script>
 <script src="../static/bootstrap/js/bootstrap.js"></script>
+<script src="../static/Semantic/semantic.min.js"></script>
 <script src="../static/basic.js"></script>
 
 {% block js %}

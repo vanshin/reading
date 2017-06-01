@@ -80,20 +80,16 @@ class Sentence(db.Model):
 
     def to_json(self):
         """ return json data """
-        # words = OrderedDict()
-        body_list = []
-        w_id_list = []
+        words = OrderedDict()
         words_list = sorted(self.words, key=lambda x: x.offset)
         for word in words_list:
-            w_id_list.append(word.w_id)
-            body_list.append(word.word_body)
-            # words[str(word.w_id)] = word.word_body
+            words[str(word.w_id)] = word.word_body
+        print words
         json_sentence = {
             'sen_id': self.s_id,
             'parag_number': self.parag_number,
             'sentence_body': self.sentence_body,
-            'words': body_list,
-            'w_ids': w_id_list,
+            'words': words,
         }
         return json_sentence
 

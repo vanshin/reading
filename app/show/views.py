@@ -145,7 +145,11 @@ def get_user_words(id):
     user = User.query.filter_by(u_id=id).first()
     words = user.words.all()
     noted_words = [ word for word in words if word.word_note.first() is not None ]
-    # data
+
+    if not noted_words:
+        return output()
+
+    # set ret data
     ret = {}
     words = []
     for word in noted_words:
@@ -157,12 +161,12 @@ def get_user_words(id):
         if not sentence:
             logging.info('user_word_sentence not exist')
             data['reading_id'] = 0
-        else :
+        else:
             data['reading_id'] = sentence.reading_id
         data['sen_id'] = sen_id
         data['word_body'] = word.word_body
         words.append(data)
-    if not data:
+    if not words:
         logging.info('user_sentence_data not exist')
     ret['words'] = words
     return output(ret, to_json=False)

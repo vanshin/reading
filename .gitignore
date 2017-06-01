@@ -10,4 +10,7 @@ build
 config.py
 nohup.out
 
+
 /migrations
+/__pycache__
+/app/__pycache__

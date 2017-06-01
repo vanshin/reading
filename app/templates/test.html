@@ -5,29 +5,37 @@
 
 
 {% block content %}
-<button onclick="tanchu()">ceshi</button>
-    <div class="ui modal">
-        <i class="close icon"></i>
-        <div class="header">
-            模态框标题
-        </div>
-        <div class="image content">
-            <div class="image">
-            图像可以出现在左边或图标上 
-            </div>
-            <div class="description">
-            描述可以出现在右边
-            </div>
-        </div>
-        <div class="actions">
-            <div class="ui button">取消</div>
-            <div class="ui button">确定</div>
-        </div>
+<div class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">
+        模态框标题
     </div>
+    <div class="image content">
+    <div class="image">
+        图像可以出现在左边或图标上 
+    </div>
+    <div class="description">
+        描述可以出现在右边
+    </div>
+    </div>
+    <div class="actions">
+        <div class="ui button">取消</div>
+        <div class="ui button">确定</div>
+    </div>
+</div>
+<div id="content">
+
+    <input type="button" a='1' value="ceshi1">
+    <input type="button" a='2' value="ceshi2">
+    <input type="button" a='3' value="ceshi3">
+    <input type="button" a='4' value="ceshi4">
+</div>
+
+
 {% endblock %}
 
 
 
 {% block js %}
-<script src="../static/run.js"></script>
+<script src="../static/test.js"></script>
 {% endblock %}

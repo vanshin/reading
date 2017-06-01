@@ -19,8 +19,8 @@ def GET_FNone_True(data):
     data = data.to_json()
     data['code'] = 200
     data['message'] = 'SUCCESS'
-    print data
-    return json.dumps(data, ensure_ascii=True, cls=None, separators=(',', ':'), default = json_default_trans)
+    return jsonify(data)
+    # return json.dumps(data, ensure_ascii=True, cls=None, separators=(',', ':'), default = json_default_trans)
 
 def GET_None_True(data):
     data = dict(code=404, message='NOT FOUND')
@@ -29,7 +29,6 @@ def GET_None_True(data):
 def GET_FNone_False(data):
     data['code'] = 200
     data['message'] = 'SUCCESS'
-    print data
     return jsonify(data)
 
 def PUT_FNone_True(data):

@@ -13,7 +13,7 @@ from . import user
 from ..models import User
 from .. import db
 from ..reading import get_random
-from forms import LoginForm
+from forms import LoginForm, RegiForm
 
 @user.route('/login', methods=['GET', 'POST'])
 def login():

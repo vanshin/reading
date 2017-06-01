@@ -15,15 +15,16 @@ $(document).ready(function(){
 	})
 })
 
+function tanchu(){
+	$('.ui.modal')
+		.modal('show')
+	;
+}
+
+
 $('.ui.accordion').accordion();
 // $('.ui.modal').modal();
-function tanchu(){
-	
-	$('.ui.modal')
-		.modal({blurring: true})
-		.modal('show')
-		
-}
+
 
 
 
@@ -161,9 +162,10 @@ $("div").delegate("span.reading_content","click",function(e){
 		sentence.empty()
 		var span = ""
 		words = data.words
+		w_ids = data.w_ids
 		console.log(words)
 		for (x in words) {
-			span = span + '<span class="word_content" word_id="' + x +'" >' + words[x] + " " + "</span>";
+			span = span + '<span class="word_content" word_id="' + w_ids[x] +'" >' + words[x] + " " + "</span>";
 		}
 		sentence.prepend(span)
 	})

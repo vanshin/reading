@@ -204,6 +204,7 @@ $("#submitword").click(function(){
 	})
 })
 
+
 $("#submit").click(function(){
 	var id = $("p.sentence").attr("sen_id")
 		phrase = $("textarea#phrase").val()

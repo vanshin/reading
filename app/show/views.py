@@ -30,6 +30,7 @@ def get_reading_list(id):
     readings = []
     for reading in readings_map:
         readings.append(Reading.query.filter_by(id=reading.reading_id).first())
+    reading_ids = [x.r_id for x in readings]
     logging.info('readings=%s' % readings)
     if readings:
         output(to_json=False)
@@ -40,6 +41,8 @@ def get_reading_list(id):
     for order in order_set:
         name_dict = {}
         for x in Reading.query.filter_by(reading_order=order).all():
+            if x.r_id not in reading_ids:
+                continue
             name_dict[x.r_id] = x.reading_name
         data[order] = name_dict
 

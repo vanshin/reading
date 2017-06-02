@@ -22,7 +22,8 @@ def post_edit_list(id):
     reading_json = request.get_json(force=True, silent=True)
     r_id = reading_json.get('reading_id', 0)
     reading_id = Reading.query.filter_by(r_id=r_id).first().id
-    user_id = User.query.filter_by(u_id=id).first().id
+    user = User.query.filter_by(u_id=id).first()
+    user_id = user.id
     ur_map = User_Reading_Map(reading_id=reading_id, user_id=user_id)
     db.session.add(ur_map)
     return output(user)

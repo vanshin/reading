@@ -43,6 +43,11 @@ def words():
     """ 背诵单词 """
     return render_template('words.html')
 
+@main.route('/share', methods=['GET'])
+def share():
+    """ 分享 """
+    return render_template('share.html')
+
 @main.route('/test', methods=['GET'])
 def test():
     """ 测试有的没的 """

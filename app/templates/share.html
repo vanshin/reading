@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block title %} 首页 {% endblock %}
+
+{% block content %}
+<div id="share">
+    用户：</br>
+    <input type="text" name="user" class="form-control" val="" id="user">
+    </br>
+    文章：</br>
+    <input type="text" name="readingid" class="form-control" val="" id="reading">
+    </br>
+    <input type="button" value="分享" id="submitshare">
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script src="../static/share.js"></script>
+{% endblock %}

@@ -144,3 +144,8 @@ function get_ibutton(content) {
 	ibutton.setAttribute('value', content)
 	return ibutton
 }
+
+function get_div() {
+	var div = document.createElement('DIV')
+	return div
+}

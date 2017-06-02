@@ -5,6 +5,7 @@ $(document).ready(function(){
 
 function get_userlist(id) {
     var readings = $('#readings')
+    var tbody = $('#tbody')
     $.ajax({
 		type: 'GET',
 		url: '/user/'+id+'/list',
@@ -14,11 +15,11 @@ function get_userlist(id) {
 			if (key!='code' && key!= 'message'){
 				var title = key
 				for (x in value){
-                    div = get_div()
-					div.append(get_span(x, value[x]))
-                    div.append(get_span(x, '-----'))
-                    div.append(get_span(x, x))
-                    readings.append(div)
+
+                    var tr = get_tr()
+                    tr.append(get_td(value[x]))
+                    tr.append(get_td(x))
+                    tbody.append(tr)
 				}
 				
 			}
@@ -29,6 +30,10 @@ function get_userlist(id) {
 $("#submitshare").click(function(){
 	var user_id = $("input#user").val()
 		r_id = $('input#reading').val()
+    if (user_id == '' || r_id == ''){
+        alert('请输入id')
+        return
+    }
 	data = {
 		"reading_id": r_id
 	}

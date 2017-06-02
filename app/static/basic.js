@@ -149,3 +149,19 @@ function get_div() {
 	var div = document.createElement('DIV')
 	return div
 }
+
+function get_tbody() {
+	var tbody = document.createElement('TBODY')
+	return tbody
+}
+
+function get_tr() {
+	var tr = document.createElement('TR')
+	return tr
+}
+
+function get_td(content) {
+	var td = document.createElement('TD')
+	td.innerText = content
+	return td
+}

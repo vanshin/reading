@@ -2,11 +2,15 @@
 
 import logging
 import functools
+import config
+from config import *
 logging.basicConfig(level=logging.INFO)
 
 from flask_login import current_user
+
 from models import User, Reading, Sentence, Word
-from output import output
+from output import output, output2
+
 
 
 def check_user(level):
@@ -19,27 +23,38 @@ def check_user(level):
         @functools.wraps(func)
         def __(*args, **kwargs):
             func_id = kwargs.get('id', 0)
-            if level == "word":
-                word = Word.query.filter_by(id=func_id).first()
+            # 验证用户是否登陆
+            if current_user.is_anonymous:
+                return output(code=RRET.USER_NOT_LOGIN)
+
+            # 验证用户是否是当前登陆用户
+            if level == 'user' and current_user.u_id != func_id:
+                return output(code=RRET.USER_NOT_SELF)
+
+            # 验证用户是否拥有资源
+            if level == 'word':
+                word = Word.query.filter_by(w_id=func_id).first()
+                if not word:
+                    output2(code=RRET.RES_NOT_EXIST)
                 user_id = word.user_id
                 if user_id == current_user.id:
                     return func(*args, **kwargs)
                 else:
-                    return output()
+                    return output(RRET.RES_NOT_EXIST)
             if level == "sentence":
-                sentence = Sentence.query.filter_by(id=func_id).first()
+                sentence = Sentence.query.filter_by(s_id=func_id).first()
                 user_id = sentence.user_id
                 if user_id == current_user.id:
                     return func(args, **kwargs)
                 else:
-                    return output()
+                    return output(RRET.RES_NOT_EXIST)
             if level == "reading":
-                reading = Reading.query.filter_by(id=func_id).first()
+                reading = Reading.query.filter_by(r_id=func_id).first()
                 user_id = reading.user_id
                 if user_id == current_user.id:
                     return func(*args, **kwargs)
                 else:
-                    return output()
+                    return output(RRET.RES_NOT_EXIST)
         return __
     return _
 

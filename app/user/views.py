@@ -71,6 +71,57 @@ def get_user_id():
     return output(data=info, to_json=False)
 
 
+@user.route('/user/<int:id>/sentences', methods=['GET'])
+def get_user_sentences(id):
+    """ 请求用户所有笔记句子 """
+    user = User.query.filter_by(u_id=id).first()
+    sentences = user.sentences.all()
+    noted_sens = [ sen for sen in sentences if sen.sentence_notes.first() is not None ]
+    # data
+    ret = {}
+    sentences = []
+    for sen in noted_sens:
+        data = {}
+        data['sen_id'] = sen.s_id
+        data['reading_id'] = sen.reading_id
+        data['sen_body'] = sen.sentence_body
+        sentences.append(data)
+    if not sentences:
+        logging.info('user_sentences_data not exist')
+    ret['sentences'] = sentences
+    return output(ret, to_json=False)
+
+@user.route('/user/<int:id>/words', methods=['GET'])
+def get_user_words(id):
+    """ 请求用户所有笔记单词 """
+    user = User.query.filter_by(u_id=id).first()
+    words = user.words.all()
+    noted_words = [ word for word in words if word.word_note.first() is not None ]
+
+    if not noted_words:
+        return output()
+
+    # set ret data
+    ret = {}
+    words = []
+    for word in noted_words:
+        data = {}
+        data['word_id'] = word.w_id
+        sen_id = word.sentence_id
+        logging.debug('sen_id={}'.format(sen_id))
+        sentence = Sentence.query.filter_by(s_id=sen_id).first()
+        if not sentence:
+            logging.info('user_word_sentence not exist')
+            data['reading_id'] = 0
+        else:
+            data['reading_id'] = sentence.reading_id
+        data['sen_id'] = sen_id
+        data['word_body'] = word.word_body
+        words.append(data)
+    if not words:
+        logging.info('user_sentence_data not exist')
+    ret['words'] = words
+    return output(ret, to_json=False)
 
 
 

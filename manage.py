@@ -1,10 +1,13 @@
 #coding=utf-8
+
+import sys
+import os
+
 from app import create_app, db
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 from app.models import Reading, Sentence, Word, Word_Note, Sentence_Note, User
 
-import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
 

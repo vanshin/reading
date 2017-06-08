@@ -8,10 +8,11 @@ logging.basicConfig(level=logging.INFO)
 from flask import render_template, jsonify, request
 from flask_login import current_user, login_required
 
+
+from config.RRET import *
 from ..output import output
 from ..decorator import check_user
 from . import show
-
 from ..models import (
     Reading, Sentence,
     Sentence_Note, Word, Word_Note,
@@ -20,64 +21,58 @@ from ..models import (
 from .. import db
 from ..reading import ReadingProcess, get_random
 
+@check_user('user')
 @show.route('/user/<int:id>/list', methods=['GET'])
-@login_required
 def get_reading_list(id):
     """ 请求文章列表 """
-    if current_user.u_id != id:
-        output()
-    readings_map = User.query.filter_by(u_id=id).first().readings
+    user_readings = User.query.filter_by(u_id=id).first().readings
+
+    # 生成reading ORM OBJECT的列表
     readings = []
-    for reading in readings_map:
+    for reading in user_readings:
         readings.append(Reading.query.filter_by(id=reading.reading_id).first())
-    reading_ids = [x.r_id for x in readings]
-    logging.info('readings=%s' % readings)
-    if readings:
-        output(to_json=False)
+    if not readings:
+        return output(RES_NOT_EXIST)
 
+    # 获取 order
     order_set = {x.reading_order for x in readings}
+
+    # 根据order生成数据，name_dict是id:name
     data = {}
-
     for order in order_set:
-        name_dict = {}
-        for x in Reading.query.filter_by(reading_order=order).all():
-            if x.r_id not in reading_ids:
-                continue
-            name_dict[x.r_id] = x.reading_name
+        name_dict = {y.r_id: y.reading_name for y in readings if y.reading_order == order}
         data[order] = name_dict
-
-    # data = {x:y for x in order_list for y in name_list}
-    return output(data=data, to_json=False)
+    return output(SUCCESS, data=data)
 
 
+@check_user('reading')
 @show.route('/reading/<int:id>/sentence_notes', methods=['GET'])
-# @check_user('reading')
 def get_sentence_notes(id):
     """ 请求文章下所有的句子笔记 """
     reading = Reading.query.filter_by(r_id=id).first()
-    sentence_notes = dict()
+    sentence_notes = {}
     for sentence in reading.sentences:
-        note = dict()
+        note = {}
         note['sentence_id'] = sentence.id
         note['phrase'] = sentence.sentence_notes.phrase
         note['grammar'] = sentence.sentence_notes.grammar
         note['translation'] = sentence.sentence_notes.translation
         sentence_notes[sentence.id] = note
-    return output(sentence_notes)
+    return output(SUCCESS, data=sentence_notes)
 
 @show.route('/reading/<int:id>', methods=['GET'])
-# @check_user('reading')
+@check_user('reading')
 def get_reading(id):
     """ 请求文章 """
     reading = Reading.query.filter_by(r_id=id).first()
-    return output(reading)
+    return output(SUCCESS, data=reading)
 
 @show.route('/reading/<int:id>/word_notes', methods=['GET'])
-# @check_user('reading')
+@check_user('reading')
 def get_word_notes(id):
     """ 请求文章下所有的单词笔记 """
     reading = Reading.query.filter_by(r_id=id).first()
-    word_notes = dict()
+    word_notes = {}
     for sentence in reading.sentences:
         for word in sentence.words:
             note = dict()
@@ -85,34 +80,34 @@ def get_word_notes(id):
             note['Phonogram'] = word.Phonogram
             note['Chinese'] = word.Chinese
             word_notes[word]
-    return output(word_notes)
+    return output(SUCCESS ,data=word_notes)
 
 @show.route('/sentence/<int:id>', methods=['GET'])
-# @check_user('sentence')
+@check_user('sentence')
 def sentence(id):
     """ 请求句子 """
     sentence = Sentence.query.filter_by(s_id=id).first()
-    return output(sentence)
+    return output(SUCCESS, data=sentence)
 
 @show.route('/sentence/<int:id>/note', methods=['GET'])
-# @check_user('sentence')
+@check_user('sentence')
 def get_sentence_note(id):
     """ 请求句子的笔记 """
     sentence = Sentence.query.filter_by(s_id=id).first()
     sentence_note = sentence.sentence_notes.order_by(Sentence_Note.id.desc()).first()
     if isinstance(sentence_note, Sentence_Note):
-        return output(sentence_note)
+        return output(SUCCESS, data=sentence_note)
     return output()
 
 @show.route('/word/<int:id>', methods=['GET'])
-# @check_user('word')
+@check_user('word')
 def word(id):
     """ 请求单词 """
     word = Word.query.filter_by(w_id=id).first()
     return output(word)
 
 @show.route('/word/<int:id>/note', methods=['GET'])
-# @check_user('word')
+@check_user('word')
 def get_word_note(id):
     """ 请求单词的笔记 """
     word = Word.query.filter_by(w_id=id).first()
@@ -121,56 +116,4 @@ def get_word_note(id):
         return output(word_note)
     return output()
 
-
-@show.route('/user/<int:id>/sentences', methods=['GET'])
-def get_user_sentences(id):
-    """ 请求用户所有笔记句子 """
-    user = User.query.filter_by(u_id=id).first()
-    sentences = user.sentences.all()
-    noted_sens = [ sen for sen in sentences if sen.sentence_notes.first() is not None ]
-    # data
-    ret = {}
-    sentences = []
-    for sen in noted_sens:
-        data = {}
-        data['sen_id'] = sen.s_id
-        data['reading_id'] = sen.reading_id
-        data['sen_body'] = sen.sentence_body
-        sentences.append(data)
-    if not sentences:
-        logging.info('user_sentences_data not exist')
-    ret['sentences'] = sentences
-    return output(ret, to_json=False)
-
-@show.route('/user/<int:id>/words', methods=['GET'])
-def get_user_words(id):
-    """ 请求用户所有笔记单词 """
-    user = User.query.filter_by(u_id=id).first()
-    words = user.words.all()
-    noted_words = [ word for word in words if word.word_note.first() is not None ]
-
-    if not noted_words:
-        return output()
-
-    # set ret data
-    ret = {}
-    words = []
-    for word in noted_words:
-        data = {}
-        data['word_id'] = word.w_id
-        sen_id = word.sentence_id
-        logging.debug('sen_id={}'.format(sen_id))
-        sentence = Sentence.query.filter_by(s_id=sen_id).first()
-        if not sentence:
-            logging.info('user_word_sentence not exist')
-            data['reading_id'] = 0
-        else:
-            data['reading_id'] = sentence.reading_id
-        data['sen_id'] = sen_id
-        data['word_body'] = word.word_body
-        words.append(data)
-    if not words:
-        logging.info('user_sentence_data not exist')
-    ret['words'] = words
-    return output(ret, to_json=False)
 

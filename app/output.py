@@ -1,6 +1,7 @@
 #coding=utf-8
 import json
 import datetime
+import config
 
 from flask import jsonify
 from flask import request
@@ -34,7 +35,6 @@ def GET_FNone_False(data):
 def PUT_FNone_True(data):
     data = data.to_json()
     data['code'] = 200
-    print data
     return jsonify(data)
 
 def PUT_None_True(data):
@@ -51,8 +51,18 @@ def POST_FNone_True(data):
     data['message'] = 'SUCCESS'
     return jsonify(data)
 
+def output(code, data=None):
+    message = config.MES[code]
+    ret = {}
+    ret['code'] = code
+    ret['message'] = message
+    if data:
+        data = data.to_json()
+        ret.update(data)
+    return jsonify(ret)
+
 # 根据相应的情况，分别使用不同的处理方法
-def output(data=None, to_json=True):
+def output2(data=None, to_json=True):
     """ 中间处理函数 """
     methods = {
         'PUT_None_True': PUT_None_True,

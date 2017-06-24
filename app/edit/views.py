@@ -10,6 +10,7 @@ from flask_login import current_user, login_required
 
 from ..output import output
 from ..decorator import check_user
+from config import RRET
 from . import edit
 
 from ..models import (
@@ -77,7 +78,7 @@ def put_reading():
     ur_map = User_Reading_Map(reading_id=reading_id, user_id=user_id)
     db.session.add(ur_map)
     db.session.commit()
-    return output(reading_)
+    return output(RRET.SUCCESS, data=reading_)
 
 
 @edit.route('/sentence/<int:id>/note', methods=['PUT'])
@@ -95,7 +96,7 @@ def edit_sentence_notes(id):
                                   sn_id=get_random()
                                  )
     db.session.add(sentence_note)
-    return output(sentence_note)
+    return output(RRET.SUCCESS, data=sentence_note)
 
 @edit.route('/word/<int:id>/note', methods=['PUT'])
 def edit_word_notes(id):
@@ -111,7 +112,7 @@ def edit_word_notes(id):
                          )
     db.session.add(word_note)
     # db.session.commit()
-    return output(word_note)
+    return output(RRET.SUCCESS, data=word_note)
 
 @edit.route('/reading/<int:id>/parag', methods=['GET'])
 def get_parag(id):

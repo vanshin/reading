@@ -102,6 +102,7 @@ function get_list(content_json) {
 	return div_list
 }
 
+
 function get_span(sen_id, text) {
 	var span = document.createElement('SPAN')
 	span.setAttribute('class', 'reading_content')
@@ -165,3 +166,22 @@ function get_td(content) {
 	td.innerText = content
 	return td
 }
+
+
+function a_get(){
+	$.ajax({
+		type: 'GET',
+		url: 'user/1235139/list',
+
+	}).done(function(data){
+		return data
+	})
+}
+
+// function x_get(){
+// 	axios.get({
+// 		url: '/user'
+// 	})
+// }
+
+

@@ -45,13 +45,13 @@ def check_user(level):
                 sentence = Sentence.query.filter_by(s_id=func_id).first()
                 user_id = sentence.user_id
                 if user_id == current_user.id:
-                    return func(args, **kwargs)
+                    return func(*args, **kwargs)
                 else:
                     return output(RRET.RES_NOT_EXIST)
             if level == "reading":
                 reading = Reading.query.filter_by(r_id=func_id).first()
-                user_id = reading.user_id
-                if user_id == current_user.id:
+                user_ids = [user.user_id for user in reading.users]
+                if current_user.u_id in user_ids:
                     return func(*args, **kwargs)
                 else:
                     return output(RRET.RES_NOT_EXIST)

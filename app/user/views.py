@@ -14,6 +14,7 @@ from ..models import User
 from .. import db
 from ..reading import get_random
 from forms import LoginForm, RegiForm
+from config import RRET
 
 @user.route('/login', methods=['GET', 'POST'])
 def login():
@@ -42,7 +43,7 @@ def regi():
         if not username:
             flash("用户名未填写")
             return render_template('auth/regi.html', form=form)
-            
+
         password = form.password.data
         password2 = form.password2.data
         if password == password2:
@@ -64,11 +65,11 @@ def regi():
 @login_required
 def get_user_id():
     """ 获取当前用户的ID """
-    logging.info("current_user is %s" % current_user)
+    logging.info("current_user is %s" % current_user    )
     if current_user.is_anonymous:
-        output()
+        return output(RRET.USER_NOT_LOGIN)
     info = dict(id=current_user.u_id)
-    return output(data=info, to_json=False)
+    return output(RRET.SUCCESS, data=info)
 
 
 @user.route('/user/<int:id>/sentences', methods=['GET'])

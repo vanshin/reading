@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<!--html-->
+<html lang="zh-CN">
+<head>
+    {%- block head %}
+
+    <!--meta-->
+    <meta charset="utf-8">
+    <meta name="description" content="reading">
+    <meta name="keywords" content="english,reading,kaoyan,CET4,CET6">
+    {%- block metas %}{% endblock %}
+    <!--title-->
+    <title>{%- block title %}{% endblock %}</title>
+    <!--styles-->
+    <link rel="stylesheet" href="../static/style2.css">
+    <link rel="stylesheet" href="../static/Semantic/semantic.min.css">
+    {%- block styles %} {% endblock %}
+
+    {%- endblock %}
+</head>
+<body{% block body_attribs %}{% endblock body_attribs %}>
+    {% block body -%}
+    <!--navbar-->
+    {% block navbar %}
+    <div class="ui fixed inverted menu">
+        <div class="ui container">
+            <a href="/" class="header item">
+            <img class="set" src="../static/note.png" alt="reading">Home
+            </a>
+            <a class="item" href="{{ url_for('main.input') }}">输入文章</a>
+            <div class="ui dropdown item simple">
+                背诵
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <a class="item" href="{{ url_for('main.sentences') }}">背句子</a>
+                    <a class="item" href="{{ url_for('main.words') }}">背单词</a>
+                </div>
+            </div>
+            <a class="item" href="{{ url_for('main.share') }}">分享</a>
+            <div class="right menu">
+                <a class="item" href="{{ url_for('user.login') }}">登录</a>
+                <a class="item" href="{{ url_for('user.regi') }}">注册</a>
+            </div>
+            
+        </div>
+    </div>
+    {%- endblock navbar %}
+
+    {% block content -%}
+        <div class="ui grid" id="app">
+            {% block sidebar %} {% endblock %}
+            {% block reading %} {% endblock %}
+            {% block note %} {% endblock %}
+        </div>
+        <div>
+        {% block template -%}
+        <div id="template"></div>
+        {%- endblock %}
+        </div>
+
+    {%- endblock content %}
+
+    {% block scripts %}
+    <script src="../static/jquery.min2.js"></script>
+    <script src="../static/bootstrap/js/bootstrap.js"></script>
+    <script src="../static/Semantic/semantic.min.js"></script>
+    <script src="../static/basic.js"></script>
+    {%- endblock scripts %}
+    {% block js %}
+    {% endblock %}
+    {%- endblock body %}
+</body>
+</html>

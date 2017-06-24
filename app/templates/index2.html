@@ -1,0 +1,29 @@
+{% extends 'base2.html' %}
+{% block title %} 首页 {% endblock %}
+
+{% block sidebar %}
+<div id="sidebar" class="4 wide column">
+    <div id="order_div" class="ui vertical following fluid accordion text menu">
+        
+    </div>
+    <accordion :items="items"></accordion>
+</div>
+{% endblock %}
+
+{% block reading %}
+<div id="reading" class="12 wide column"> 
+</div>
+{% endblock %}
+
+{% block note %}
+{% endblock %}
+
+{% block template %}
+<div id="template"></div>
+{% endblock %}
+
+{% block js %}
+<script src="https://unpkg.com/vue/dist/vue.js"></script> 
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="../static/run2.js"></script>
+{% endblock %}

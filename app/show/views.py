@@ -9,7 +9,7 @@ from flask import render_template, jsonify, request
 from flask_login import current_user, login_required
 
 
-from config.RRET import *
+from config import RRET
 from ..output import output
 from ..decorator import check_user
 from . import show
@@ -32,7 +32,7 @@ def get_reading_list(id):
     for reading in user_readings:
         readings.append(Reading.query.filter_by(id=reading.reading_id).first())
     if not readings:
-        return output(RES_NOT_EXIST)
+        return output(RRET.RES_NOT_EXIST)
 
     # 获取 order
     order_set = {x.reading_order for x in readings}
@@ -42,7 +42,7 @@ def get_reading_list(id):
     for order in order_set:
         name_dict = {y.r_id: y.reading_name for y in readings if y.reading_order == order}
         data[order] = name_dict
-    return output(SUCCESS, data=data)
+    return output(RRET.SUCCESS, data=data)
 
 
 @check_user('reading')
@@ -58,14 +58,15 @@ def get_sentence_notes(id):
         note['grammar'] = sentence.sentence_notes.grammar
         note['translation'] = sentence.sentence_notes.translation
         sentence_notes[sentence.id] = note
-    return output(SUCCESS, data=sentence_notes)
+    return output(RRET.SUCCESS, data=sentence_notes)
 
-@show.route('/reading/<int:id>', methods=['GET'])
 @check_user('reading')
+@show.route('/reading/<int:id>', methods=['GET'])
 def get_reading(id):
     """ 请求文章 """
     reading = Reading.query.filter_by(r_id=id).first()
-    return output(SUCCESS, data=reading)
+    print(reading)
+    return output(RRET.SUCCESS, data=reading)
 
 @show.route('/reading/<int:id>/word_notes', methods=['GET'])
 @check_user('reading')
@@ -80,14 +81,14 @@ def get_word_notes(id):
             note['Phonogram'] = word.Phonogram
             note['Chinese'] = word.Chinese
             word_notes[word]
-    return output(SUCCESS ,data=word_notes)
+    return output(RRET.SUCCESS ,data=word_notes)
 
 @show.route('/sentence/<int:id>', methods=['GET'])
 @check_user('sentence')
 def sentence(id):
     """ 请求句子 """
     sentence = Sentence.query.filter_by(s_id=id).first()
-    return output(SUCCESS, data=sentence)
+    return output(RRET.SUCCESS, data=sentence)
 
 @show.route('/sentence/<int:id>/note', methods=['GET'])
 @check_user('sentence')
@@ -96,7 +97,7 @@ def get_sentence_note(id):
     sentence = Sentence.query.filter_by(s_id=id).first()
     sentence_note = sentence.sentence_notes.order_by(Sentence_Note.id.desc()).first()
     if isinstance(sentence_note, Sentence_Note):
-        return output(SUCCESS, data=sentence_note)
+        return output(RRET.SUCCESS, data=sentence_note)
     return output()
 
 @show.route('/word/<int:id>', methods=['GET'])

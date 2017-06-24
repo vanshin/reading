@@ -61,7 +61,7 @@ $("div").delegate(".reading_list", "click", function(e){
 		dataType:'json'
 	}).done(function(data){
 		$reading.empty()
-		if(data['code'] == 200){
+		if(data['code'] == 2000){
 			body = data.reading_body
 			for (key in body){
 				var p = document.createElement('P')

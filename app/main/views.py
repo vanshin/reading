@@ -53,6 +53,11 @@ def test():
     """ 测试有的没的 """
     return render_template('test.html')
 
+@main.route('/index2', methods=['GET'])
+def index2():
+    """ 测试index """
+    return render_template('index2.html')
+
 # @main.route('/user/<int:id>/list', methods=['GET'])
 # @login_required
 # def get_reading_list(id):
